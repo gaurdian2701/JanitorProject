@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private float moveDirection;
     private float currentMoveSpeed;
+    private SuckedObjectsController suckerController;
 
     private enum PlayerState
     {
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
         walking,
         falling,
         jumping,
+        attacking,
+        sucking
     };
 
     private PlayerState playerState;
@@ -35,12 +38,13 @@ public class PlayerController : MonoBehaviour
         playerCollider = GetComponent<CapsuleCollider2D>();     
         playerState = PlayerState.idle;
         currentMoveSpeed = moveSpeed;
+        suckerController = GetComponent<SuckedObjectsController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(IsGrounded());
+       
     }
 
     private void OnDrawGizmos()
@@ -59,28 +63,29 @@ public class PlayerController : MonoBehaviour
     public void PlayerMove(InputAction.CallbackContext context)
     {
         moveDirection = context.ReadValue<float>();
+
         Vector3 newRotation;
 
         if (moveDirection < 0f)
         {
-            newRotation = new(0, 180, 0);
+            newRotation = new Vector3(0, 180, 0);
             transform.eulerAngles = newRotation;
             ResetForwardPower();
         }
 
         else if (moveDirection > 0f)
         {
-            newRotation = new(0, 0, 0);
+            newRotation = new Vector3(0, 0, 0);
             transform.eulerAngles = newRotation;
         }
-
-        animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
     }
 
     public void PlayerAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
+        {
             animator.SetTrigger("PlayerAttacked");
+        }
 
         if(IsGrounded())
             StartCoroutine(HaltPlayer());
@@ -89,7 +94,9 @@ public class PlayerController : MonoBehaviour
     public void PlayerSuck(InputAction.CallbackContext context)
     {
         if (context.performed)
+        {
             animator.SetTrigger("PlayerSucked");
+        }
 
         if(IsGrounded())
             StartCoroutine(HaltPlayer());
@@ -97,13 +104,19 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerJump(InputAction.CallbackContext context)
     {
-        playerState = PlayerState.jumping; 
+        playerState = PlayerState.jumping;
         if (context.performed && IsGrounded())
         {
-            animator.SetTrigger("PlayerJumped");
             rb.velocity = new Vector2(rb.velocity.x, verticalJumpPower);
             currentForwardPower = midairForwardAccelaration;
         }
+    }
+
+    void ResetAnimationTriggers()
+    {
+        animator.Rebind();
+        animator.ResetTrigger("PlayerAttacked");
+        animator.ResetTrigger("PlayerSucked");
     }
 
     void DecreaseForwardPower()
@@ -119,12 +132,13 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         rb.velocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.velocity.y);
+        animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
         CheckForFall();
     }
 
     void CheckForFall()
     {
-        if (!IsGrounded())
+        if (!IsGrounded() && rb.velocity.y < -0.1f)
         {
             playerState = PlayerState.falling;
             DecreaseForwardPower();

@@ -11,10 +11,10 @@ TagManager:
   - Platform
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - Suckable
+  - PlayerHitbox
   - 
   - 
   - 
