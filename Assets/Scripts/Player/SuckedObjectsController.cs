@@ -28,17 +28,6 @@ public class SuckedObjectsController : MonoBehaviour
         suckedObjects.Add(obj);
     }
 
-    public void ReleaseSuckedObjects()
-    {
-        if (suckedObjects.Count == 0)
-            return;
-
-        GameObject obj = suckedObjects[suckedObjects.Count - 1];
-        EnableComponents(obj);
-        obj.GetComponent<SuckableObjectStateManager>().SwitchToShoot();
-        suckedObjects.Remove(obj);  
-    }
-
     private void EnableComponents(GameObject obj)
     {
         obj.GetComponent<SpriteRenderer>().enabled = true;
@@ -50,5 +39,25 @@ public class SuckedObjectsController : MonoBehaviour
         obj.GetComponent<SpriteRenderer>().enabled = false;
         obj.GetComponent<BoxCollider2D>().enabled = false;
         obj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+    }
+
+
+    public void ReleaseSuckedObjects()
+    {
+        if (SuckedObjectsListEmpty())
+            return;
+
+        GameObject obj = suckedObjects[suckedObjects.Count - 1];
+        EnableComponents(obj);
+        obj.GetComponent<SuckableObjectStateManager>().SwitchToShoot();
+        suckedObjects.Remove(obj);
+    }
+
+    public bool SuckedObjectsListEmpty()
+    {
+        if (suckedObjects.Count == 0)
+            return true;
+
+        return false;
     }
 }

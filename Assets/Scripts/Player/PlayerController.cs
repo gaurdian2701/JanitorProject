@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private float moveDirection;
     private float currentMoveSpeed;
     private SuckedObjectsController suckerController;
+    private bool isJumping;
 
     private enum PlayerState
     {
@@ -39,6 +40,7 @@ public class PlayerController : MonoBehaviour
         playerState = PlayerState.idle;
         currentMoveSpeed = moveSpeed;
         suckerController = GetComponent<SuckedObjectsController>();
+        isJumping = false;
     }
 
     // Update is called once per frame
@@ -105,11 +107,23 @@ public class PlayerController : MonoBehaviour
     public void PlayerJump(InputAction.CallbackContext context)
     {
         playerState = PlayerState.jumping;
+
+        if (isJumping)
+            return;
+
         if (context.performed && IsGrounded())
-        {
-            rb.velocity = new Vector2(rb.velocity.x, verticalJumpPower);
-            currentForwardPower = midairForwardAccelaration;
-        }
+            ExecuteJump();
+
+        else if (context.performed && !IsGrounded() && !suckerController.SuckedObjectsListEmpty())
+            ExecuteJump();
+    }
+
+    public void isJumpingToggle() => isJumping = !isJumping;
+
+    private void ExecuteJump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, verticalJumpPower);
+        currentForwardPower = midairForwardAccelaration;
     }
 
     void ResetAnimationTriggers()
