@@ -23,7 +23,7 @@ public class PlayerSuckCollision : MonoBehaviour
     private IEnumerator IgnoreCollisions(GameObject obj) 
     {
         ignore = true;
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(0.5f);
         ignore = false;
     }
 }
