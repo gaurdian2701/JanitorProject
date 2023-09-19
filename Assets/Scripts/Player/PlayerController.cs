@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+
     }
 
     private void OnDrawGizmos()
@@ -115,10 +115,18 @@ public class PlayerController : MonoBehaviour
             ExecuteJump();
 
         else if (context.performed && !IsGrounded() && !suckerController.SuckedObjectsListEmpty())
+        {
             ExecuteJump();
+            suckerController.ReleaseSuckedObjects();
+        }
     }
 
-    public void isJumpingToggle() => isJumping = !isJumping;
+    public IEnumerator jumpingToggle()
+    {
+        isJumping = true;
+        yield return new WaitForSecondsRealtime(0.1f);
+        isJumping = false;
+    }
 
     private void ExecuteJump()
     {

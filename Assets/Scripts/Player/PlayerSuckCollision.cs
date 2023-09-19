@@ -16,14 +16,17 @@ public class PlayerSuckCollision : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Suckable") && !ignore)
         {
-            StartCoroutine(IgnoreCollisions(collision.gameObject));
+            ignore = true;
+            Debug.Log("PLAYER: " + ignore);
         }
     }
 
-    private IEnumerator IgnoreCollisions(GameObject obj) 
+    private void OnCollisionExit2D(Collision2D collision)
     {
-        ignore = true;
-        yield return new WaitForSecondsRealtime(0.5f);
-        ignore = false;
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Suckable"))
+        {
+            ignore = false;
+            Debug.Log("PLAYER: " + ignore);
+        }
     }
 }

@@ -17,7 +17,7 @@ public class BoxShotState : SuckableBase
         obj.transform.localScale = obj.originalSize;
 
         rb = obj.GetComponent<Rigidbody2D>();
-        rb.constraints = RigidbodyConstraints2D.FreezePositionY;
+        rb.constraints = shootPos.transform.rotation.z < 0f ? RigidbodyConstraints2D.FreezePositionX : RigidbodyConstraints2D.FreezePositionY;
     }
 
     public override void UpdateState(SuckableObjectStateManager obj)

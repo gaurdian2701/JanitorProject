@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2796439480502362284}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.154, y: -0.044, z: 0}
+  m_LocalPosition: {x: 0.154, y: -0.055, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -41,10 +41,9 @@ GameObject:
   m_Component:
   - component: {fileID: 592093180615667077}
   - component: {fileID: 1832683764880037823}
-  - component: {fileID: 7248279036063468591}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: PlungerColliderContainer
-  m_TagString: Untagged
+  m_TagString: PlayerHitBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,7 +75,7 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 64
@@ -99,19 +98,6 @@ CircleCollider2D:
   m_Offset: {x: -0.017763868, y: 0.080913514}
   serializedVersion: 2
   m_Radius: 0.07727578
---- !u!114 &7248279036063468591
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2993250930017771997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 833a1fe679fbb7f458b8ec0ec0c07c6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ignore: 0
 --- !u!1 &3334747532602134572
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,9 +146,10 @@ GameObject:
   - component: {fileID: 6809795062804077115}
   - component: {fileID: 3476961340138941114}
   - component: {fileID: 6492497853764122877}
+  - component: {fileID: 4558756023326655846}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -272,9 +259,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 4601466012774737021}
   moveSpeed: 8
-  verticalJumpPower: 10.3
+  verticalJumpPower: 12.5
   midairForwardAccelaration: 1.5
-  midairDecelaration: 0.5
+  midairDecelaration: 0.05
   playerCollider: {fileID: 6809795062804077115}
 --- !u!114 &6344250138729936103
 MonoBehaviour:
@@ -458,3 +445,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   suckedObjects: []
+--- !u!114 &4558756023326655846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8202235052748549628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 833a1fe679fbb7f458b8ec0ec0c07c6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ignore: 0
