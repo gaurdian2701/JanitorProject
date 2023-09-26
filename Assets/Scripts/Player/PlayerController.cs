@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     };
 
     private PlayerState playerState;
-    // Start is called before the first frame update
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -43,11 +43,18 @@ public class PlayerController : MonoBehaviour
         isJumping = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public Transform GetAttachments(PlayerChildren.Children child)
     {
-
+        return transform.GetChild((int)child);
     }
+
+    void FixedUpdate()
+    {
+        rb.velocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.velocity.y);
+        animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
+        CheckForFall();
+    }
+
 
     private void OnDrawGizmos()
     {
@@ -150,13 +157,6 @@ public class PlayerController : MonoBehaviour
             currentForwardPower -= midairDecelaration;
     }
     void ResetForwardPower() => currentForwardPower = 1f;
-
-    void FixedUpdate()
-    {
-        rb.velocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.velocity.y);
-        animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
-        CheckForFall();
-    }
 
     void CheckForFall()
     {

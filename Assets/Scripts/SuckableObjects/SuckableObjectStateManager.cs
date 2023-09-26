@@ -9,7 +9,7 @@ public class SuckableObjectStateManager : MonoBehaviour
     public BoxIdleState idle = new BoxIdleState();
     public BoxSuckedState sucked = new BoxSuckedState();
     public BoxShotState shot = new BoxShotState();
-    public GameObject sucker;
+    public PlayerController sucker;
 
     public Vector3 originalSize = new Vector3(1f, 1f, 1f);
     public float shootSpeed;

@@ -6,12 +6,12 @@ public class BoxShotState : SuckableBase
 {
     private Rigidbody2D rb;
     private Vector2 direction;
-    private GameObject shootPos;
+    private Transform shootPos;
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        shootPos = obj.transform.parent.Find("ShootPosition").gameObject;
-        direction = shootPos.transform.right;
-        obj.transform.position = shootPos.transform.position;
+        shootPos = obj.sucker.GetAttachments(PlayerChildren.Children.ShootPosition);
+        direction = shootPos.right;
+        obj.transform.position = shootPos.position;
 
         obj.transform.parent = null;
         obj.transform.localScale = obj.originalSize;

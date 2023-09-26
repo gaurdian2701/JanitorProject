@@ -8,14 +8,13 @@ public class BoxSuckedState : SuckableBase
 {
     private Vector3 sizDecreaseRate = new Vector3(2.5f, 2.5f, 0f);
     private bool boxSucked;
-    private SuckableObjectStateManager box;
+    private Transform suckPos;
 
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        Debug.Log("Object " + obj.gameObject + " has been sucked");
         obj.transform.localScale = obj.originalSize;
         boxSucked = false;
-        box = obj;
+        suckPos = obj.sucker.GetAttachments(PlayerChildren.Children.SuckPosition);
     }
 
 
@@ -35,7 +34,7 @@ public class BoxSuckedState : SuckableBase
 
         obj.transform.Rotate(obj.transform.forward, 15f);
         
-        obj.transform.position = Vector3.LerpUnclamped(obj.transform.position, obj.sucker.transform.Find("SuckPosition").transform.position, 1f);
+        obj.transform.position = Vector3.LerpUnclamped(obj.transform.position, suckPos.position, 1f);
     }
 
     public override void OnCollisionEnter(SuckableObjectStateManager obj, Collision2D collision)

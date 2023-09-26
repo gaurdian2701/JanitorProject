@@ -17,7 +17,6 @@ public class PlayerSuckCollision : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Suckable") && !ignore)
         {
             ignore = true;
-            Debug.Log("PLAYER: " + ignore);
         }
     }
 
@@ -26,7 +25,6 @@ public class PlayerSuckCollision : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Suckable"))
         {
             ignore = false;
-            Debug.Log("PLAYER: " + ignore);
         }
     }
 }

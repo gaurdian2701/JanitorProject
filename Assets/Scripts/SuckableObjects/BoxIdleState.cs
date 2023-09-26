@@ -19,12 +19,10 @@ public class BoxIdleState : SuckableBase
 
     public override void OnCollisionEnter(SuckableObjectStateManager obj, Collision2D collision)
     {
-        if((collision.gameObject.layer == LayerMask.NameToLayer("Player")))
-            Debug.Log("BOX: " + collision.gameObject.GetComponent<PlayerSuckCollision>().ignore);
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player") && !collision.gameObject.GetComponent<PlayerSuckCollision>().ignore)
         {
-            obj.sucker = collision.gameObject;
+            obj.sucker = collision.gameObject.GetComponent<PlayerController>();
             obj.SwitchState(obj.sucked);
         }
     }

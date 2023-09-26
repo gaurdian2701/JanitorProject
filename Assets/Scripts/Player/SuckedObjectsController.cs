@@ -22,7 +22,6 @@ public class SuckedObjectsController : MonoBehaviour
 
     private void HandleSuckedObjects(GameObject obj)
     {
-        Debug.Log("OBJECT INSIDE PLAYER");
         DisableComponents(obj);
         obj.transform.parent = transform;
         suckedObjects.Add(obj);
