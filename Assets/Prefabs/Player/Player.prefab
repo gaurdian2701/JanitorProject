@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2796439480502362284}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.154, y: -0.055, z: 0}
+  m_LocalPosition: {x: -0.006, y: -0.167, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -122,7 +122,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3334747532602134572}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.085, y: -0.038, z: 0}
+  m_LocalPosition: {x: 0.108, y: -0.038, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -162,7 +162,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8202235052748549628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.6, y: 0.91, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -170,7 +170,7 @@ Transform:
   - {fileID: 5286592525062040853}
   - {fileID: 8630634861342996667}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4543046035195878827
 SpriteRenderer:
@@ -210,8 +210,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 879552825
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -463056398, guid: 6b62492a82dae4342a304c37f76cd316, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -416,8 +416,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.048517346, y: -0.008017212}
-  m_Size: {x: 0.08, y: 0.28866965}
+  m_Offset: {x: -0.0019349307, y: -0.008017212}
+  m_Size: {x: 0.083726525, y: 0.28866965}
   m_Direction: 0
 --- !u!114 &3476961340138941114
 MonoBehaviour:
@@ -444,7 +444,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb193107605a5c04a997a0708284a0ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  suckedObjects: []
 --- !u!114 &4558756023326655846
 MonoBehaviour:
   m_ObjectHideFlags: 0

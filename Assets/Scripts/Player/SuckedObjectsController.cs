@@ -6,11 +6,10 @@ using UnityEngine;
 
 public class SuckedObjectsController : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> suckedObjects;
-    private void Start()
+    private List<GameObject> suckedObjects;
+    private void Awake()
     {
         SuckableBase.objectSucked += HandleSuckedObjects;
-        suckedObjects.Clear();
         suckedObjects = new List<GameObject>();
     }
 

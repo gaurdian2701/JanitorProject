@@ -32,7 +32,7 @@ public class BoxSuckedState : SuckableBase
             boxSucked = true;
         }
 
-        obj.transform.Rotate(obj.transform.forward, 15f);
+        obj.transform.Rotate(obj.transform.forward, 25f);
         
         obj.transform.position = Vector3.LerpUnclamped(obj.transform.position, suckPos.position, 1f);
     }

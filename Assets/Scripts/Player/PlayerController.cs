@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float midairDecelaration;
     [SerializeField] private CapsuleCollider2D playerCollider;
 
+
     private float currentForwardPower = 1f;
     private Rigidbody2D rb;
     private float moveDirection;
@@ -32,7 +33,6 @@ public class PlayerController : MonoBehaviour
     };
 
     private PlayerState playerState;
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -53,21 +53,9 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.velocity.y);
         animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
         CheckForFall();
+        animator.SetInteger("PlayerState", (int)playerState);
     }
 
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        RaycastHit2D rayhit = Physics2D.Raycast(playerCollider.bounds.center, -transform.up, 1.3f, LayerMask.GetMask("Platform"));
-        Gizmos.DrawRay(playerCollider.bounds.center, -transform.up);
-
-        if (rayhit)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(playerCollider.bounds.center, -transform.up);
-        }
-    }
 
     public void PlayerMove(InputAction.CallbackContext context)
     {
@@ -131,7 +119,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator jumpingToggle()
     {
         isJumping = true;
-        yield return new WaitForSecondsRealtime(0.1f);
+        yield return new WaitForSecondsRealtime(0.2f);
         isJumping = false;
     }
 
@@ -160,28 +148,26 @@ public class PlayerController : MonoBehaviour
 
     void CheckForFall()
     {
-        if (!IsGrounded() && rb.velocity.y < -0.1f)
+        if (!IsGrounded() && rb.velocity.y != 0f)
         {
-            playerState = PlayerState.falling;
+            playerState = rb.velocity.y < 0f ? PlayerState.falling : PlayerState.jumping;
             DecreaseForwardPower();
         }
 
         else if (IsGrounded())
             playerState = PlayerState.idle;
-
-        animator.SetInteger("PlayerState", (int)playerState);
     }
 
     private IEnumerator HaltPlayer()
     {
         currentMoveSpeed = 0f;
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSecondsRealtime(0.3f);
         currentMoveSpeed = moveSpeed;
     }
 
     bool IsGrounded()
     {
-        if (Physics2D.Raycast(playerCollider.bounds.center, -transform.up, 1.3f, LayerMask.GetMask("Platform")))
+        if (Physics2D.Raycast(playerCollider.bounds.center, -transform.up, 1.3f, LayerMask.GetMask("Ground")))
             return true;
 
         return false;
