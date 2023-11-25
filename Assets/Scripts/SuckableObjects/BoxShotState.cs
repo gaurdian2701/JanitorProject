@@ -15,6 +15,7 @@ public class BoxShotState : SuckableBase
 
         obj.transform.parent = null;
         obj.transform.localScale = obj.originalSize;
+        obj.transform.rotation = Quaternion.identity;
 
         rb = obj.GetComponent<Rigidbody2D>();
         rb.constraints = shootPos.transform.rotation.z < 0f ? RigidbodyConstraints2D.FreezePositionX : RigidbodyConstraints2D.FreezePositionY;

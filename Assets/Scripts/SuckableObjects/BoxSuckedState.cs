@@ -34,11 +34,6 @@ public class BoxSuckedState : SuckableBase
 
         obj.transform.Rotate(obj.transform.forward, 25f);
         
-        obj.transform.position = Vector3.LerpUnclamped(obj.transform.position, suckPos.position, 1f);
-    }
-
-    public override void OnCollisionEnter(SuckableObjectStateManager obj, Collision2D collision)
-    {
-        
+        obj.transform.position = Vector3.Lerp(obj.transform.position, suckPos.position, 1f);
     }
 }

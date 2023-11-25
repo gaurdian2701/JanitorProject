@@ -30,6 +30,7 @@ public class SuckedObjectsController : MonoBehaviour
     {
         obj.GetComponent<SpriteRenderer>().enabled = true;
         obj.GetComponent<BoxCollider2D>().enabled = true;
+        obj.GetComponent<SuckableObjectStateManager>().enabled = true;
     }
 
     private void DisableComponents(GameObject obj)
@@ -37,6 +38,7 @@ public class SuckedObjectsController : MonoBehaviour
         obj.GetComponent<SpriteRenderer>().enabled = false;
         obj.GetComponent<BoxCollider2D>().enabled = false;
         obj.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        obj.GetComponent<SuckableObjectStateManager>().enabled = false;
     }
 
 

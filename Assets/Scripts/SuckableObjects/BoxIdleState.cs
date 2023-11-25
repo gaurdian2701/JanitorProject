@@ -11,19 +11,4 @@ public class BoxIdleState : SuckableBase
         rb = obj.GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.None;
     }
-
-    public override void UpdateState(SuckableObjectStateManager obj)
-    {
-
-    }
-
-    public override void OnCollisionEnter(SuckableObjectStateManager obj, Collision2D collision)
-    {
-
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player") && !collision.gameObject.GetComponent<PlayerSuckCollision>().ignore)
-        {
-            obj.sucker = collision.gameObject.GetComponent<PlayerController>();
-            obj.SwitchState(obj.sucked);
-        }
-    }
 }

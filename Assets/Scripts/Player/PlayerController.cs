@@ -7,6 +7,7 @@ using System.Text;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private PlayerInput playerInput;
     [SerializeField] private Animator animator;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float verticalJumpPower;
@@ -33,19 +34,16 @@ public class PlayerController : MonoBehaviour
     };
 
     private PlayerState playerState;
-    void Start()
+
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        playerCollider = GetComponent<CapsuleCollider2D>();     
         playerState = PlayerState.idle;
         currentMoveSpeed = moveSpeed;
-        suckerController = GetComponent<SuckedObjectsController>();
         isJumping = false;
-    }
 
-    public Transform GetAttachments(PlayerChildren.Children child)
-    {
-        return transform.GetChild((int)child);
+        rb = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<CapsuleCollider2D>();
+        suckerController = GetComponent<SuckedObjectsController>();
     }
 
     void FixedUpdate()
@@ -56,7 +54,24 @@ public class PlayerController : MonoBehaviour
         animator.SetInteger("PlayerState", (int)playerState);
     }
 
+    #region Input and Miscallaneous functions
+    public void DisableInput()
+    {
+        if (IsGrounded())
+            playerInput.DeactivateInput();
+    }
 
+    public void EnableInput()
+    {
+        playerInput.ActivateInput();
+    }
+    public Transform GetAttachments(PlayerChildren.Children child)
+    {
+        return transform.GetChild((int)child);
+    }
+    #endregion
+
+    #region Player Movement
     public void PlayerMove(InputAction.CallbackContext context)
     {
         moveDirection = context.ReadValue<float>();
@@ -77,28 +92,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void PlayerAttack(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            animator.SetTrigger("PlayerAttacked");
-        }
-
-        if(IsGrounded())
-            StartCoroutine(HaltPlayer());
-    }
-
-    public void PlayerSuck(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            animator.SetTrigger("PlayerSucked");
-        }
-
-        if(IsGrounded())
-            StartCoroutine(HaltPlayer());
-    }
-
     public void PlayerJump(InputAction.CallbackContext context)
     {
         playerState = PlayerState.jumping;
@@ -116,7 +109,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public IEnumerator jumpingToggle()
+    public IEnumerator JumpingToggle()
     {
         isJumping = true;
         yield return new WaitForSecondsRealtime(0.2f);
@@ -129,14 +122,7 @@ public class PlayerController : MonoBehaviour
         currentForwardPower = midairForwardAccelaration;
     }
 
-    void ResetAnimationTriggers()
-    {
-        animator.Rebind();
-        animator.ResetTrigger("PlayerAttacked");
-        animator.ResetTrigger("PlayerSucked");
-    }
-
-    void DecreaseForwardPower()
+    private void DecreaseForwardPower()
     {
         if (currentForwardPower <= 1f)
             ResetForwardPower();
@@ -144,9 +130,9 @@ public class PlayerController : MonoBehaviour
         else
             currentForwardPower -= midairDecelaration;
     }
-    void ResetForwardPower() => currentForwardPower = 1f;
+    private void ResetForwardPower() => currentForwardPower = 1f;
 
-    void CheckForFall()
+    private void CheckForFall()
     {
         if (!IsGrounded() && rb.velocity.y != 0f)
         {
@@ -165,7 +151,7 @@ public class PlayerController : MonoBehaviour
         currentMoveSpeed = moveSpeed;
     }
 
-    bool IsGrounded()
+    private bool IsGrounded()
     {
         if (Physics2D.Raycast(playerCollider.bounds.center, -transform.up, 1.3f, LayerMask.GetMask("Ground")))
             return true;
@@ -173,4 +159,29 @@ public class PlayerController : MonoBehaviour
         return false;
 
     }
+    #endregion
+
+    #region Player Attack
+    public void PlayerAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            animator.SetTrigger("PlayerAttacked");
+        }
+
+        if (IsGrounded())
+            StartCoroutine(HaltPlayer());
+    }
+
+    public void PlayerSuck(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            animator.SetTrigger("PlayerSucked");
+        }
+
+        if (IsGrounded())
+            StartCoroutine(HaltPlayer());
+    }
+    #endregion
 }
