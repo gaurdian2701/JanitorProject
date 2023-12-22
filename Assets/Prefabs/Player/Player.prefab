@@ -145,8 +145,8 @@ GameObject:
   - component: {fileID: 3321602426439910121}
   - component: {fileID: 6809795062804077115}
   - component: {fileID: 3476961340138941114}
-  - component: {fileID: 6492497853764122877}
-  - component: {fileID: 4558756023326655846}
+  - component: {fileID: 397878123256103251}
+  - component: {fileID: 4456949487325659859}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -170,7 +170,7 @@ Transform:
   - {fileID: 5286592525062040853}
   - {fileID: 8630634861342996667}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4543046035195878827
 SpriteRenderer:
@@ -211,7 +211,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 879552825
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: -463056398, guid: 6b62492a82dae4342a304c37f76cd316, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -257,12 +257,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97fef2209e5cf664aa394a574c0dd0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInput: {fileID: 0}
   animator: {fileID: 4601466012774737021}
   moveSpeed: 8
   verticalJumpPower: 12.5
   midairForwardAccelaration: 1.5
   midairDecelaration: 0.05
   playerCollider: {fileID: 6809795062804077115}
+  isAttacking: 0
 --- !u!114 &6344250138729936103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,29 +433,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 352c80e22fa23204abfe88ee76ba29f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plungerSuckCollider: {fileID: 1832683764880037823}
---- !u!114 &6492497853764122877
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8202235052748549628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb193107605a5c04a997a0708284a0ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4558756023326655846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8202235052748549628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 833a1fe679fbb7f458b8ec0ec0c07c6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   ignore: 0
+  plungerSuckCollider: {fileID: 1832683764880037823}
+--- !u!114 &397878123256103251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8202235052748549628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8972c321cabc8e54ead7c335eb607ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectNumber: 2
+--- !u!114 &4456949487325659859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8202235052748549628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d4e9d3198c4e474a99c6d68b64dbd88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

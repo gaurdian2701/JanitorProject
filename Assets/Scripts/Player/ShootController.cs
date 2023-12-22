@@ -4,13 +4,26 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SuckedObjectsController : MonoBehaviour
+public class ShootController : MonoBehaviour
 {
+    [SerializeField] private int objectNumber;
+
+    private PlayerColliderManager playerColliderManager;
     private List<GameObject> suckedObjects;
+    private bool canShoot;
+
     private void Awake()
     {
         SuckableBase.objectSucked += HandleSuckedObjects;
         suckedObjects = new List<GameObject>();
+        playerColliderManager = GetComponent<PlayerColliderManager>();
+
+        canShoot = true;
+    }
+
+    private void Start()
+    {
+        playerColliderManager.SetObjectLimit(objectNumber);
     }
 
     private void OnDestroy()
@@ -24,6 +37,8 @@ public class SuckedObjectsController : MonoBehaviour
         DisableComponents(obj);
         obj.transform.parent = transform;
         suckedObjects.Add(obj);
+
+        playerColliderManager.SetObjectCount(suckedObjects.Count);
     }
 
     private void EnableComponents(GameObject obj)
@@ -44,13 +59,15 @@ public class SuckedObjectsController : MonoBehaviour
 
     public void ReleaseSuckedObjects()
     {
-        if (SuckedObjectsListEmpty())
+        if (SuckedObjectsListEmpty() || !canShoot)
             return;
 
         GameObject obj = suckedObjects[suckedObjects.Count - 1];
         EnableComponents(obj);
         obj.GetComponent<SuckableObjectStateManager>().SwitchToShoot();
         suckedObjects.Remove(obj);
+
+        playerColliderManager.SetObjectCount(suckedObjects.Count);
     }
 
     public bool SuckedObjectsListEmpty()
@@ -59,5 +76,15 @@ public class SuckedObjectsController : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public void SetShootCondition(bool condition)
+    {
+        canShoot = condition;
+    }
+
+    public bool CanShoot()
+    {
+        return canShoot;
     }
 }

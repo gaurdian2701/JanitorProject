@@ -20,8 +20,9 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private float moveDirection;
     private float currentMoveSpeed;
-    private SuckedObjectsController suckerController;
+    private ShootController shootController;
     private bool isJumping;
+    [SerializeField] private bool isAttacking;
 
     private enum PlayerState
     {
@@ -40,10 +41,11 @@ public class PlayerController : MonoBehaviour
         playerState = PlayerState.idle;
         currentMoveSpeed = moveSpeed;
         isJumping = false;
+        isAttacking = false;
 
         rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<CapsuleCollider2D>();
-        suckerController = GetComponent<SuckedObjectsController>();
+        shootController = GetComponent<ShootController>();
     }
 
     void FixedUpdate()
@@ -102,10 +104,10 @@ public class PlayerController : MonoBehaviour
         if (context.performed && IsGrounded())
             ExecuteJump();
 
-        else if (context.performed && !IsGrounded() && !suckerController.SuckedObjectsListEmpty())
+        else if (context.performed && !IsGrounded() && !shootController.SuckedObjectsListEmpty())
         {
             ExecuteJump();
-            suckerController.ReleaseSuckedObjects();
+            shootController.ReleaseSuckedObjects();
         }
     }
 
@@ -182,6 +184,16 @@ public class PlayerController : MonoBehaviour
 
         if (IsGrounded())
             StartCoroutine(HaltPlayer());
+    }
+
+    public bool CheckIfAttacking()
+    {
+        return isAttacking;
+    }
+
+    public void ToggleAttackState()
+    {
+        isAttacking = !isAttacking;
     }
     #endregion
 }
