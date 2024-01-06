@@ -6,17 +6,17 @@ using UnityEngine.UIElements;
 
 public class BoxSuckedState : SuckableBase
 {
-    private Vector3 sizDecreaseRate = new Vector3(2.5f, 2.5f, 0f);
+    private Vector3 sizDecreaseRate = new Vector3(3f, 3f, 0f);
     private bool boxSucked;
     private Transform suckPos;
 
     public override void EnterState(SuckableObjectStateManager obj)
     {
+        RenderUsability.Invoke(obj.usabilityIndex, Usability.Unusable);
         obj.transform.localScale = obj.originalSize;
         boxSucked = false;
-        suckPos = obj.sucker.GetAttachments(PlayerChildren.Children.SuckPosition);
+        suckPos = obj.launcher.GetSuckPos();
     }
-
 
     public override void UpdateState(SuckableObjectStateManager obj)
     {
@@ -28,7 +28,7 @@ public class BoxSuckedState : SuckableBase
 
         else
         {
-            objectSucked.Invoke(obj.gameObject);
+            ObjectSucked.Invoke(obj.gameObject);
             boxSucked = true;
         }
 

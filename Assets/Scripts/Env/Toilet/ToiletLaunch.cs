@@ -16,14 +16,20 @@ public class ToiletLaunch : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         player = collision.GetComponent<PlayerController>();
-        StatusManager.ApplyStatus.Invoke(Status.CannotShoot);
+
+        if(player)
+            StatusManager.ApplyStatus.Invoke(Status.CannotShoot);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
         if(player && player.CheckIfAttacking())
         {
-            launcherAnimator.enabled=true;
+            AnimatorStateInfo info = launcherAnimator.GetCurrentAnimatorStateInfo(0);
+            if (info.IsName("WaterColumnFall") && info.normalizedTime > 1)
+                launcherAnimator.Rebind();
+            else if(!launcherAnimator.enabled)
+                launcherAnimator.enabled = true;
         }
     }
 

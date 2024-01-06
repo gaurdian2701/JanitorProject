@@ -7,13 +7,14 @@ using System.Text;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private PlayerInput playerInput;
-    [SerializeField] private Animator animator;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float verticalJumpPower;
     [SerializeField] private float midairForwardAccelaration;
     [SerializeField] private float midairDecelaration;
-    [SerializeField] private CapsuleCollider2D playerCollider;
+    [SerializeField] private Transform groundCube;
+
+    private Animator animator;
+    private CapsuleCollider2D playerCollider;
 
 
     private float currentForwardPower = 1f;
@@ -22,19 +23,11 @@ public class PlayerController : MonoBehaviour
     private float currentMoveSpeed;
     private ShootController shootController;
     private bool isJumping;
-    [SerializeField] private bool isAttacking;
+    private bool isAttacking;
 
-    private enum PlayerState
-    {
-        idle,
-        walking,
-        falling,
-        jumping,
-        attacking,
-        sucking
-    };
 
     private PlayerState playerState;
+    RaycastHit2D hit;
 
     private void Awake()
     {
@@ -46,6 +39,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<CapsuleCollider2D>();
         shootController = GetComponent<ShootController>();
+        animator = GetComponent<Animator>();
     }
 
     void FixedUpdate()
@@ -55,23 +49,6 @@ public class PlayerController : MonoBehaviour
         CheckForFall();
         animator.SetInteger("PlayerState", (int)playerState);
     }
-
-    #region Input and Miscallaneous functions
-    public void DisableInput()
-    {
-        if (IsGrounded())
-            playerInput.DeactivateInput();
-    }
-
-    public void EnableInput()
-    {
-        playerInput.ActivateInput();
-    }
-    public Transform GetAttachments(PlayerChildren.Children child)
-    {
-        return transform.GetChild((int)child);
-    }
-    #endregion
 
     #region Player Movement
     public void PlayerMove(InputAction.CallbackContext context)
@@ -155,8 +132,12 @@ public class PlayerController : MonoBehaviour
 
     private bool IsGrounded()
     {
-        if (Physics2D.Raycast(playerCollider.bounds.center, -transform.up, 1.3f, LayerMask.GetMask("Ground")))
+        hit = Physics2D.CircleCast(playerCollider.bounds.center, 0.3f, -transform.up, 1.3f, LayerMask.GetMask("Ground"));
+        if (hit)
+        {
+            groundCube.transform.position = hit.point;
             return true;
+        }
 
         return false;
 

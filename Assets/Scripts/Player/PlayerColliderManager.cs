@@ -33,7 +33,7 @@ public class PlayerColliderManager : MonoBehaviour
 
         if (obj && !obj.isSucked && !ignore)
         {
-            obj.sucker = controller;
+            obj.launcher = controller.gameObject;
             obj.SwitchToSuck();
             ignore = true;
         }

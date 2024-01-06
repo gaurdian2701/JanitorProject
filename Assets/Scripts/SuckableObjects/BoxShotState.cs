@@ -9,7 +9,7 @@ public class BoxShotState : SuckableBase
     private Transform shootPos;
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        shootPos = obj.sucker.GetAttachments(PlayerChildren.Children.ShootPosition);
+        shootPos = obj.launcher.GetShootPos();
         direction = shootPos.right;
         obj.transform.position = shootPos.position;
 
@@ -18,7 +18,9 @@ public class BoxShotState : SuckableBase
         obj.transform.rotation = Quaternion.identity;
 
         rb = obj.GetComponent<Rigidbody2D>();
-        rb.constraints = shootPos.transform.rotation.z < 0f ? RigidbodyConstraints2D.FreezePositionX : RigidbodyConstraints2D.FreezePositionY;
+        rb.constraints = shootPos.transform.rotation.z == 0f ? RigidbodyConstraints2D.FreezePositionY : RigidbodyConstraints2D.FreezePositionX;
+
+        obj.launcher = null;
     }
 
     public override void UpdateState(SuckableObjectStateManager obj)
@@ -28,6 +30,21 @@ public class BoxShotState : SuckableBase
 
     public override void OnCollisionEnter(SuckableObjectStateManager obj, Collision2D collision)
     {
-        obj.SwitchState(obj.idle);
+        switch(obj.projectileType)
+        {
+            case ProjectileType.Pooled:
+                if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    SuckableBase.RenderUsability(obj.usabilityIndex, Usability.Usable);
+                    obj.gameObject.SetActive(false);
+                }
+                break;
+
+            case ProjectileType.NotPooled:
+                obj.SwitchState(obj.idle);
+                break;
+
+            default: break;
+        }
     }
 }
