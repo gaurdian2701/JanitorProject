@@ -24,11 +24,19 @@ public class SuckableObjectStateManager : MonoBehaviour
     {
         isSucked = false;
         shrinkRate = new Vector3(shrinkValue, shrinkValue, 0f);
+        ChooseStartingState();
     }
-    private void Start()
+
+    private void OnDisable()
+    {
+        launcher = null;
+        currentState = null;
+        isSucked = false;
+    }
+
+    private void OnEnable()
     {
         ChooseStartingState();
-        currentState.EnterState(this);
     }
 
     private void ChooseStartingState()
@@ -44,8 +52,9 @@ public class SuckableObjectStateManager : MonoBehaviour
                 break;
 
             case ObjectState.shot:
-                currentState = shot;
-                break;
+                currentState = null;    //It is not ideal to enable the shooting state from inside the object itself, as that would tie in to 
+                break;                  //handling script execution order leading to null reference exception issues, so I've decided to set the
+                                        //current state as null and enable shooting by the launcher object.
 
             default:
                 currentState = idle;
@@ -55,7 +64,10 @@ public class SuckableObjectStateManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        currentState.UpdateState(this);
+        if (currentState != null)
+            currentState.UpdateState(this);
+        else
+            Debug.Log("NULL STATE SCRIPT EXECUTING");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class BoxShotState : SuckableBase
 {
@@ -9,6 +10,7 @@ public class BoxShotState : SuckableBase
     private Transform shootPos;
     public override void EnterState(SuckableObjectStateManager obj)
     {
+        Debug.Log(obj.name + " entered shot state with launcher" + obj.launcher.name);
         shootPos = obj.launcher.GetShootPos();
         direction = shootPos.right;
         obj.transform.position = shootPos.position;

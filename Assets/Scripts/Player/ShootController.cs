@@ -76,7 +76,6 @@ public class ShootController : MonoBehaviour
 
     public void SetShootCondition(bool condition)
     {
-        Debug.Log("shoot set to" + condition);
         canShoot = condition;
     }
 
