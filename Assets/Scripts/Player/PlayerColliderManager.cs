@@ -60,12 +60,15 @@ public class PlayerColliderManager : MonoBehaviour
         plungerSuckCollider.enabled = false;
     }
 
+    //The following functions are so that this script can know the number of objects and then block the sucking collider from taking any more objects
+    //once the limit has been reached.
+    //TODO: why not just handle this using a single event listener instead of having to call this every godddamn time an object gets sucked ffs.
     public void SetObjectLimit(int amount)
     {
         objectLimit = amount;
     }
 
-    public void SetObjectCount(int amount)
+    public void SetObjectCount(int amount) 
     {
         objectCount = amount;
 
