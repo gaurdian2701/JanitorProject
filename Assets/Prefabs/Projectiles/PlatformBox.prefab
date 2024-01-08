@@ -174,7 +174,7 @@ MonoBehaviour:
   startingState: 1
   shrinkValue: 100
   launcher: {fileID: 0}
-  originalSize: {x: 1.5, y: 1.5, z: 1}
+  originalSize: {x: 1, y: 1, z: 1}
   shootSpeed: 10
   isSucked: 0
   projectileType: 0

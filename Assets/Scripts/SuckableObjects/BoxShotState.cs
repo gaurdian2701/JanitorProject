@@ -10,7 +10,6 @@ public class BoxShotState : SuckableBase
     private Transform shootPos;
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        Debug.Log(obj.name + " entered shot state with launcher" + obj.launcher.name);
         shootPos = obj.launcher.GetShootPos();
         direction = shootPos.right;
         obj.transform.position = shootPos.position;
@@ -20,7 +19,7 @@ public class BoxShotState : SuckableBase
         obj.transform.rotation = Quaternion.identity;
 
         rb = obj.GetComponent<Rigidbody2D>();
-        rb.constraints = shootPos.transform.rotation.z == 0f ? RigidbodyConstraints2D.FreezePositionY : RigidbodyConstraints2D.FreezePositionX;
+        rb.constraints = Mathf.Abs((shootPos.transform.rotation.z * 180) % 180) == 0f ? RigidbodyConstraints2D.FreezePositionY : RigidbodyConstraints2D.FreezePositionX;
 
         obj.launcher = null;
     }

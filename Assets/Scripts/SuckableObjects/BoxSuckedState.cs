@@ -12,7 +12,9 @@ public class BoxSuckedState : SuckableBase
 
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        RenderUsability.Invoke(obj.usabilityIndex, Usability.Unusable);
+        if(obj.projectileType == ProjectileType.Pooled)
+            RenderUsability.Invoke(obj.usabilityIndex, Usability.Unusable);
+
         obj.transform.localScale = obj.originalSize;
         boxSucked = false;
         suckPos = obj.launcher.GetSuckPos();
@@ -22,6 +24,8 @@ public class BoxSuckedState : SuckableBase
     {
         if (boxSucked)
             return;
+
+        Debug.Log(sizDecreaseRate * Time.deltaTime);
 
         if (obj.transform.localScale.x > 0.1f)
             obj.transform.localScale -= sizDecreaseRate * Time.deltaTime;

@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float verticalJumpPower;
+    [SerializeField] private float extraJumpFactor;
     [SerializeField] private float midairForwardAccelaration;
     [SerializeField] private float midairDecelaration;
     [SerializeField] private Transform groundCube;
@@ -79,11 +80,11 @@ public class PlayerController : MonoBehaviour
             return;
 
         if (context.performed && IsGrounded())
-            ExecuteJump();
+            ExecuteJump(verticalJumpPower);
 
         else if (context.performed && !IsGrounded() && !shootController.SuckedObjectsListEmpty())
         {
-            ExecuteJump();
+            ExecuteJump(verticalJumpPower * extraJumpFactor);
             shootController.ReleaseSuckedObjects();
         }
     }
@@ -95,9 +96,9 @@ public class PlayerController : MonoBehaviour
         isJumping = false;
     }
 
-    private void ExecuteJump()
+    private void ExecuteJump(float jumpPower)
     {
-        rb.velocity = new Vector2(rb.velocity.x, verticalJumpPower);
+        rb.velocity = new Vector2(rb.velocity.x, jumpPower);
         currentForwardPower = midairForwardAccelaration;
     }
 

@@ -10,5 +10,6 @@ public class BoxIdleState : SuckableBase
     {
         rb = obj.GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.None;
+        Debug.Log(obj.name + " entered idle state");
     }
 }

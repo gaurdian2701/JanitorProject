@@ -25,11 +25,13 @@ public class SuckableObjectStateManager : MonoBehaviour
         isSucked = false;
         shrinkRate = new Vector3(shrinkValue, shrinkValue, 0f);
         ChooseStartingState();
+
+        if (currentState != null)
+            currentState.EnterState(this);
     }
 
     private void OnDisable()
     {
-        launcher = null;
         currentState = null;
         isSucked = false;
     }
@@ -55,7 +57,6 @@ public class SuckableObjectStateManager : MonoBehaviour
                 currentState = null;    //It is not ideal to enable the shooting state from inside the object itself, as that would tie in to 
                 break;                  //handling script execution order leading to null reference exception issues, so I've decided to set the
                                         //current state as null and enable shooting by the launcher object.
-
             default:
                 currentState = idle;
                 break;
