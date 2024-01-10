@@ -11,6 +11,11 @@ public class PlayerStatusHandler : MonoBehaviour
         StatusManager.ApplyStatus += StatusHandler;
     }
 
+    private void OnDestroy()
+    {
+        StatusManager.ApplyStatus -= StatusHandler;
+    }
+
     private void StatusHandler(Status status)
     {
         switch (status)
