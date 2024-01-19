@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float extraJumpFactor;
     [SerializeField] private float midairForwardAccelaration;
     [SerializeField] private float midairDecelaration;
-    [SerializeField] private Transform groundCube;
 
     private Animator animator;
     private CapsuleCollider2D playerCollider;
@@ -135,10 +134,7 @@ public class PlayerController : MonoBehaviour
     {
         hit = Physics2D.CircleCast(playerCollider.bounds.center, 0.3f, -transform.up, 1.3f, LayerMask.GetMask("Ground"));
         if (hit)
-        {
-            groundCube.transform.position = hit.point;
             return true;
-        }
 
         return false;
 

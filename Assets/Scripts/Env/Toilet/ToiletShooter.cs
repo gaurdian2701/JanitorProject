@@ -21,8 +21,8 @@ public class ToiletShooter : MonoBehaviour
         if (box && box.TryGetComponent(out SuckableObjectStateManager boxState))
         {
             box.SetActive(true);
-            boxState.launcher = this.gameObject;
-            boxState.usabilityIndex = tuple.Item2;
+            boxState.SetLauncher(this.gameObject);
+            boxState.SetUsabilityIndex(tuple.Item2);    
             boxState.SwitchToShoot();
         }
     }

@@ -4,30 +4,42 @@ using UnityEngine;
 
 public class SuckableObjectStateManager : MonoBehaviour
 {
-    [SerializeField] private ObjectState startingState;
-    [SerializeField] private float shrinkValue;
+    [SerializeField] ProjectileScriptableObject projectileSO;
+    [SerializeField] private GameObject hitbox;
+
     private SuckableBase currentState;
+    private ObjectState startingState;
     private Vector3 shrinkRate;
+    private ProjectileType projectileType;
+    private SpriteRenderer spriteRenderer;
+    private Vector3 originalSize = new Vector3(1f, 1f, 1f);
+    private float shootSpeed;
+    private int usabilityIndex;
+    private GameObject launcher;
 
     public BoxIdleState idle = new BoxIdleState();
     public BoxSuckedState sucked = new BoxSuckedState();
     public BoxShotState shot = new BoxShotState();
-    public GameObject launcher;
 
-    public Vector3 originalSize = new Vector3(1f, 1f, 1f);
-    public float shootSpeed;
     public bool isSucked;
-
-    public ProjectileType projectileType;
-    public int usabilityIndex;
     private void Awake()
     {
         isSucked = false;
-        shrinkRate = new Vector3(shrinkValue, shrinkValue, 0f);
+        shrinkRate = new Vector3(projectileSO.shrinkValue, projectileSO.shrinkValue, 0f);
+
+        shootSpeed = projectileSO.shootSpeed;
+        projectileType = projectileSO.projectileType;
+        startingState = projectileSO.startingState;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = projectileSO.projectileSprite;
+
         ChooseStartingState();
 
         if (currentState != null)
             currentState.EnterState(this);
+
+        hitbox.SetActive(false);
     }
 
     private void OnDisable()
@@ -76,10 +88,27 @@ public class SuckableObjectStateManager : MonoBehaviour
         currentState.OnCollisionEnter(this, collision);
     }
 
-    public Vector3 GetShrinkRate()
+    //I have made sure through layer overrides that the hitbox only gets triggered when it enters an enemy's hurtbox.
+    //But still I am adding a layer check just in case.
+    private void OnTriggerEnter2D(Collider2D collision) 
     {
-        return shrinkRate;
+        currentState.OnTriggerEnter(this, collision);
     }
+
+    public Vector3 GetShrinkRate() { return shrinkRate; }
+    
+    public Vector3 GetOriginalSize() { return originalSize; }
+
+    public float GetShootSpeed() { return shootSpeed;  }
+
+    public ProjectileType GetProjectileType() { return projectileType; }
+
+    public int GetUsabilityIndex() {  return usabilityIndex; }
+
+    public void SetUsabilityIndex(int _usabilityIndex) { usabilityIndex = _usabilityIndex; }
+
+    public GameObject GetLauncher() { return launcher; }
+    public void SetLauncher(GameObject _launcher) {  launcher = _launcher; }
 
     public void SwitchState(SuckableBase state)
     {
@@ -96,5 +125,10 @@ public class SuckableObjectStateManager : MonoBehaviour
     {
         SwitchState(sucked);
         isSucked = true;
+    }
+
+    public void ToggleHitbox(bool status)
+    {
+        hitbox.SetActive(status);
     }
 }

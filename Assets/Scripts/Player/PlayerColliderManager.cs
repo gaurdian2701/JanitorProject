@@ -31,9 +31,10 @@ public class PlayerColliderManager : MonoBehaviour
     {
         obj = collision.gameObject.GetComponent<SuckableObjectStateManager>();
 
+
         if (obj && !obj.isSucked && !ignore)
         {
-            obj.launcher = controller.gameObject;
+            obj.SetLauncher(controller.gameObject);
             obj.SwitchToSuck();
             ignore = true;
         }

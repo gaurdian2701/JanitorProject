@@ -8,8 +8,10 @@ public class BoxIdleState : SuckableBase
     private Rigidbody2D rb;
     public override void EnterState(SuckableObjectStateManager obj)
     {
+        obj.gameObject.layer = LayerMask.NameToLayer("Suckable");
         rb = obj.GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.None;
-        Debug.Log(obj.name + " entered idle state");
+
+        obj.ToggleHitbox(false);
     }
 }
