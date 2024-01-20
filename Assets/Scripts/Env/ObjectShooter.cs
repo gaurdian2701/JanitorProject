@@ -16,7 +16,6 @@ public class ObjectShooter : MonoBehaviour
     private void ShootBox()
     {
         var tuple = ObjectPoolManager.Instance.GetProjectileFromPool(projectileType);
-        Debug.Log(tuple);
         if (tuple == null)
             return;
 

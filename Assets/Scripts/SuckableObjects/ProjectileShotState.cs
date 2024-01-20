@@ -35,7 +35,16 @@ public class ProjectileShotState : SuckableBase
             case ProjectilePooledType.Pooled:
                 if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
                 {
-                    SuckableBase.RenderPlatformBoxUsability(obj.GetUsabilityIndex(), Usability.Usable);
+                    switch(obj.GetProjectileType())
+                    {
+                        case ProjectileType.PlatformBox:
+                            SuckableBase.RenderPlatformBoxUsability(obj.GetUsabilityIndex(), Usability.Usable);
+                            break;
+
+                        case ProjectileType.RoboGunProjectile:
+                            SuckableBase.RenderRoboGunProjectileUsability(obj.GetUsabilityIndex(), Usability.Usable);
+                            break;
+                    }
                     obj.gameObject.SetActive(false);
                 }
                 break;

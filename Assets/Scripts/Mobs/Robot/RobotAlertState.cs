@@ -9,6 +9,7 @@ public class RobotAlertState : RobotBaseState
     {
         robot.GetAnimator().SetTrigger("PrepareGun");
         roboGun = robot.GetRoboGun();
+        robot.SetRobotShooting(true);
     }
 
     public override void UpdateState(RobotStateManager robot)
@@ -30,6 +31,7 @@ public class RobotAlertState : RobotBaseState
         {
             robot.GetAnimator().SetTrigger("HideGun");
             robot.SetPlayerTransform(null);
+            robot.SetRobotShooting(false);
             robot.SwitchState(robot.idle);
         }
     }

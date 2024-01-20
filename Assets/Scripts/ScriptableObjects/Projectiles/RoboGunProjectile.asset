@@ -17,4 +17,4 @@ MonoBehaviour:
   projectilePooledType: 0
   projectileType: 2
   shrinkValue: 6
-  shootSpeed: 8
+  shootSpeed: 6

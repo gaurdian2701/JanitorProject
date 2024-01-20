@@ -17,8 +17,6 @@ public class ObjectPool : MonoBehaviour
 
     protected virtual void ChangeUsability(int i, Usability usability) { }
 
-    public virtual Tuple<GameObject, int> GetPooledObject() { return null; }
-
     private void InitializeList()
     {
         objectList = new List<Tuple<GameObject, int>>(listSize);
@@ -31,5 +29,14 @@ public class ObjectPool : MonoBehaviour
             objectList.Add(t);
             usabilityList.Add(Usability.Usable);
         }
+    }
+    public virtual Tuple<GameObject, int> GetPooledObject()
+    {
+        for (int i = 0; i < objectList.Capacity; i++)
+        {
+            if (!objectList[i].Item1.activeInHierarchy && usabilityList[i] == Usability.Usable)
+                return objectList[i];
+        }
+        return null;
     }
 }

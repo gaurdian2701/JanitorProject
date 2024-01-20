@@ -24,11 +24,6 @@ public class PlatformBoxPool : ObjectPool
     }
     public override Tuple<GameObject, int> GetPooledObject()
     {
-        for (int i = 0; i < objectList.Capacity; i++)
-        {
-            if (!objectList[i].Item1.activeInHierarchy && usabilityList[i] == Usability.Usable)
-                return objectList[i];
-        }
-        return null;
+        return base.GetPooledObject();
     }
 }

@@ -8,6 +8,7 @@ public class RobotStateManager : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask playerMask;
 
+
     RobotBaseState currentState;
 
     public RobotIdleState idle = new RobotIdleState();
@@ -20,8 +21,8 @@ public class RobotStateManager : MonoBehaviour
 
     private Animator animator;
     private BoxCollider2D robotCollider;
-
     private SpriteRenderer sprite;
+    private ObjectShooter roboShoot;
 
     public RobotHealth robotHealth;
 
@@ -34,8 +35,7 @@ public class RobotStateManager : MonoBehaviour
         roboGun.transform.rotation = Quaternion.identity;
 
         robotHealth = new RobotHealth(this);
-
-
+        roboShoot = GetComponent<ObjectShooter>();
     }
     private void Start()
     {
@@ -64,6 +64,7 @@ public class RobotStateManager : MonoBehaviour
         currentState.EnterState(this);
     }
 
+    public void SetRobotShooting(bool _activeState) { roboShoot.enabled = _activeState; }
     public Transform GetPlayerTransform() { return playerTransform; }
 
     public void SetPlayerTransform(Transform pos) { playerTransform = pos; }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>
 {
     [SerializeField] private ObjectPool platformBoxPool;
+    [SerializeField] private ObjectPool roboGunProjectilePool;
     protected override void Awake()
     {
         base.Awake();
@@ -19,6 +20,11 @@ public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>
             case ProjectileType.PlatformBox:
                 pooledObject = platformBoxPool.GetPooledObject();
                 break;
+
+            case ProjectileType.RoboGunProjectile:
+                pooledObject = roboGunProjectilePool.GetPooledObject();
+                break;
+
             default:
                 pooledObject = null;
                 break;
