@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToiletShooter : MonoBehaviour
+public class ObjectShooter : MonoBehaviour
 {
     [SerializeField] private float shootFrequency;
+    [SerializeField] private ProjectileType projectileType;
+    [SerializeField] private Transform shootPos;
 
     private void Awake()
     {
@@ -13,7 +15,8 @@ public class ToiletShooter : MonoBehaviour
 
     private void ShootBox()
     {
-        var tuple = ObjectPool.Instance.GetPooledObject();
+        var tuple = ObjectPoolManager.Instance.GetProjectileFromPool(projectileType);
+        Debug.Log(tuple);
         if (tuple == null)
             return;
 
@@ -23,7 +26,7 @@ public class ToiletShooter : MonoBehaviour
             box.SetActive(true);
             boxState.SetLauncher(this.gameObject);
             boxState.SetUsabilityIndex(tuple.Item2);    
-            boxState.SwitchToShoot();
+            boxState.SwitchToShoot(shootPos);
         }
     }
 }

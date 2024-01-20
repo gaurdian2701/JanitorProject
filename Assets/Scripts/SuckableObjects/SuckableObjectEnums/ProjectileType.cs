@@ -1,5 +1,6 @@
 public enum ProjectileType
 {
-    Pooled,
-    NotPooled
-}
+    StandardBox,
+    PlatformBox,
+    RoboGunProjectile
+};

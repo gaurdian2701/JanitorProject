@@ -78,6 +78,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootFrequency: 1
+  projectileType: 1
+  shootPos: {fileID: 8412880222076672411}
 --- !u!1 &6427299400136696303
 GameObject:
   m_ObjectHideFlags: 0

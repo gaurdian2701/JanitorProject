@@ -7,6 +7,7 @@ public class ProjectileScriptableObject : ScriptableObject
 {
     public Sprite projectileSprite;
     public ObjectState startingState;
+    public ProjectilePooledType projectilePooledType;
     public ProjectileType projectileType;
     public float shrinkValue;
     public float shootSpeed;

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectileSprite: {fileID: 21300000, guid: 36c3b6259d18b6a4a96acfe572ed466c, type: 3}
   startingState: 1
-  projectileType: 0
-  shrinkValue: 6
+  projectilePooledType: 0
+  projectileType: 1
+  shrinkValue: 4
   shootSpeed: 10

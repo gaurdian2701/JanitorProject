@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private float moveDirection;
     private float currentMoveSpeed;
-    private ShootController shootController;
+    private PlayerShootController shootController;
     private bool isJumping;
     private bool isAttacking;
 
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<CapsuleCollider2D>();
-        shootController = GetComponent<ShootController>();
+        shootController = GetComponent<PlayerShootController>();
         animator = GetComponent<Animator>();
     }
 

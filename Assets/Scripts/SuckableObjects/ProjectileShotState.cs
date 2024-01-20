@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class BoxShotState : SuckableBase
+public class ProjectileShotState : SuckableBase
 {
     private Rigidbody2D rb;
     private Vector2 direction;
     private Transform shootPos;
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        shootPos = obj.GetLauncher().GetShootPos();
+        shootPos = obj.GetShootPosition();
         direction = shootPos.right;
         obj.transform.position = shootPos.position;
 
@@ -17,10 +17,9 @@ public class BoxShotState : SuckableBase
         obj.transform.rotation = Quaternion.identity;
 
         rb = obj.GetComponent<Rigidbody2D>();
-        rb.constraints = Mathf.Abs((shootPos.transform.rotation.z * 180) % 180) == 0f ? RigidbodyConstraints2D.FreezePositionY : RigidbodyConstraints2D.FreezePositionX;
+        //rb.constraints = Mathf.Abs((shootPos.transform.rotation.z * 180) % 180) == 0f ? RigidbodyConstraints2D.FreezePositionY : RigidbodyConstraints2D.FreezePositionX;
 
         obj.SetLauncher(null);
-
         obj.ToggleHitbox(true);
     }
 
@@ -31,17 +30,17 @@ public class BoxShotState : SuckableBase
 
     public override void OnCollisionEnter(SuckableObjectStateManager obj, Collision2D collision)
     {
-        switch(obj.GetProjectileType())
+        switch(obj.GetProjectilePooledType())
         {
-            case ProjectileType.Pooled:
+            case ProjectilePooledType.Pooled:
                 if(collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
                 {
-                    SuckableBase.RenderUsability(obj.GetUsabilityIndex(), Usability.Usable);
+                    SuckableBase.RenderPlatformBoxUsability(obj.GetUsabilityIndex(), Usability.Usable);
                     obj.gameObject.SetActive(false);
                 }
                 break;
 
-            case ProjectileType.NotPooled:
+            case ProjectilePooledType.NotPooled:
                 obj.SwitchState(obj.idle);
                 break;
 

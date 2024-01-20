@@ -4,19 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ShootController : MonoBehaviour
+public class PlayerShootController : MonoBehaviour
 {
     [SerializeField] private int objectNumber;
 
-    private PlayerColliderManager playerColliderManager;
+    private PlayerSuckController playerColliderManager;
     [SerializeField] private List<GameObject> suckedObjects;
     [SerializeField] private bool canShoot;
+    [SerializeField] private Transform shootPos;
 
     private void Awake()
     {
         SuckableBase.ObjectSucked += HandleSuckedObjects;
         suckedObjects = new List<GameObject>();
-        playerColliderManager = GetComponent<PlayerColliderManager>();
+        playerColliderManager = GetComponent<PlayerSuckController>();
 
         canShoot = true;
     }
@@ -60,7 +61,7 @@ public class ShootController : MonoBehaviour
         GameObject obj = suckedObjects[suckedObjects.Count - 1];
 
         EnableComponents(obj);
-        obj.GetComponent<SuckableObjectStateManager>().SwitchToShoot();
+        obj.GetComponent<SuckableObjectStateManager>().SwitchToShoot(shootPos);
         suckedObjects.Remove(obj);
 
         playerColliderManager.SetObjectCount(suckedObjects.Count);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class BoxIdleState : SuckableBase
+public class ProjectileIdleState : SuckableBase
 {
     private Rigidbody2D rb;
     public override void EnterState(SuckableObjectStateManager obj)

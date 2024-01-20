@@ -4,7 +4,8 @@ using UnityEngine;
 public abstract class SuckableBase
 {
     public static Action<GameObject> ObjectSucked;
-    public static Action<int, Usability> RenderUsability;
+    public static Action<int, Usability> RenderPlatformBoxUsability;
+    public static Action<int, Usability> RenderRoboGunProjectileUsability;
     public abstract void EnterState(SuckableObjectStateManager obj);
 
     public virtual void UpdateState(SuckableObjectStateManager obj) { }

@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerColliderManager : MonoBehaviour
+public class PlayerSuckController : MonoBehaviour
 {
     public bool ignore;
 
     [SerializeField] private CircleCollider2D plungerSuckCollider;
+    [SerializeField] private Transform suckPosition;
 
     private float objectCount;
     private bool colliderLocked;
@@ -35,7 +36,7 @@ public class PlayerColliderManager : MonoBehaviour
         if (obj && !obj.isSucked && !ignore)
         {
             obj.SetLauncher(controller.gameObject);
-            obj.SwitchToSuck();
+            obj.SwitchToSuck(suckPosition);
             ignore = true;
         }
     }

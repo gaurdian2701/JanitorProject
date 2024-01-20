@@ -22,9 +22,9 @@ public class RobotIdleState : RobotBaseState
         robot.transform.position = position;
 
          rayBottom = Physics2D.Raycast(robotCollider.bounds.center, 
-            new Vector2(robot.transform.forward.z, -0.5f), 2.5f, robot.groundMask);
+            new Vector2(robot.transform.forward.z, -0.5f), 2.5f, robot.GetGroundMask());
 
-         rayForward = Physics2D.Raycast(robotCollider.bounds.center, robot.transform.right, 1f, robot.groundMask);
+         rayForward = Physics2D.Raycast(robotCollider.bounds.center, robot.transform.right, 1f, robot.GetGroundMask());
 
         if (!rayBottom || rayForward)
         {

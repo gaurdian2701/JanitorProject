@@ -5,11 +5,8 @@ using UnityEngine;
 public class RobotStateManager : MonoBehaviour
 {
     [SerializeField] private GameObject roboGun;
-
-    public LayerMask groundMask;
-    public LayerMask playerMask;
-
-    private Transform playerTransform;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask playerMask;
 
     RobotBaseState currentState;
 
@@ -18,6 +15,8 @@ public class RobotStateManager : MonoBehaviour
 
     private float moveSpeed = 2f;
     private float currentSpeed;
+
+    private Transform playerTransform;
 
     private Animator animator;
     private BoxCollider2D robotCollider;
@@ -35,6 +34,8 @@ public class RobotStateManager : MonoBehaviour
         roboGun.transform.rotation = Quaternion.identity;
 
         robotHealth = new RobotHealth(this);
+
+
     }
     private void Start()
     {
@@ -67,6 +68,9 @@ public class RobotStateManager : MonoBehaviour
 
     public void SetPlayerTransform(Transform pos) { playerTransform = pos; }
 
+    public LayerMask GetGroundMask() { return groundMask; }
+
+    public LayerMask GetPlayerMask() { return playerMask; } 
     public GameObject GetRoboGun() { return roboGun; }
     public float GetCurrentSpeed(){ return currentSpeed;}
 

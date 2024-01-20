@@ -10,16 +10,21 @@ public class SuckableObjectStateManager : MonoBehaviour
     private SuckableBase currentState;
     private ObjectState startingState;
     private Vector3 shrinkRate;
+
+    private ProjectilePooledType projectilePooledType;
     private ProjectileType projectileType;
     private SpriteRenderer spriteRenderer;
+
     private Vector3 originalSize = new Vector3(1f, 1f, 1f);
     private float shootSpeed;
     private int usabilityIndex;
     private GameObject launcher;
+    private Transform shootPosition;
+    private Transform suckPosition;
 
-    public BoxIdleState idle = new BoxIdleState();
-    public BoxSuckedState sucked = new BoxSuckedState();
-    public BoxShotState shot = new BoxShotState();
+    public ProjectileIdleState idle = new ProjectileIdleState();
+    public ProjectileSuckedState sucked = new ProjectileSuckedState();
+    public ProjectileShotState shot = new ProjectileShotState();
 
     public bool isSucked;
     private void Awake()
@@ -28,6 +33,7 @@ public class SuckableObjectStateManager : MonoBehaviour
         shrinkRate = new Vector3(projectileSO.shrinkValue, projectileSO.shrinkValue, 0f);
 
         shootSpeed = projectileSO.shootSpeed;
+        projectilePooledType = projectileSO.projectilePooledType;
         projectileType = projectileSO.projectileType;
         startingState = projectileSO.startingState;
 
@@ -101,7 +107,9 @@ public class SuckableObjectStateManager : MonoBehaviour
 
     public float GetShootSpeed() { return shootSpeed;  }
 
-    public ProjectileType GetProjectileType() { return projectileType; }
+    public ProjectilePooledType GetProjectilePooledType() { return projectilePooledType; }
+
+    public ProjectileType GetProjectileType() {  return projectileType; }
 
     public int GetUsabilityIndex() {  return usabilityIndex; }
 
@@ -110,19 +118,25 @@ public class SuckableObjectStateManager : MonoBehaviour
     public GameObject GetLauncher() { return launcher; }
     public void SetLauncher(GameObject _launcher) {  launcher = _launcher; }
 
+    public Transform GetShootPosition() { return shootPosition; }
+
+    public Transform GetSuckPosition() { return suckPosition; }
+
     public void SwitchState(SuckableBase state)
     {
         currentState = state;
         currentState.EnterState(this);
     }
 
-    public void SwitchToShoot()
+    public void SwitchToShoot(Transform _shootPosition)
     {
+        shootPosition = _shootPosition;
         SwitchState(shot);
         isSucked = false;
     }
-    public void SwitchToSuck()
+    public void SwitchToSuck(Transform _suckPosition)
     {
+        suckPosition = _suckPosition;
         SwitchState(sucked);
         isSucked = true;
     }

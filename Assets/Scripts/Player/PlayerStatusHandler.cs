@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class PlayerStatusHandler : MonoBehaviour
 {
-    private ShootController shootController;
+    private PlayerShootController shootController;
     private void Awake()
     {
-        shootController = GetComponent<ShootController>();
+        shootController = GetComponent<PlayerShootController>();
         StatusManager.ApplyStatus += StatusHandler;
     }
 

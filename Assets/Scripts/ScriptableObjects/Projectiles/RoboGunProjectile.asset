@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f30b92d0d5a51d46bb5a560568797de, type: 3}
-  m_Name: StandardBox
+  m_Name: RoboGunProjectile
   m_EditorClassIdentifier: 
-  projectileSprite: {fileID: 21300000, guid: 36c3b6259d18b6a4a96acfe572ed466c, type: 3}
-  startingState: 0
-  projectileType: 1
+  projectileSprite: {fileID: -8250934725238262437, guid: 5fd38cb8c536ee247b466045eff3cf42, type: 3}
+  startingState: 1
+  projectilePooledType: 0
+  projectileType: 2
   shrinkValue: 6
-  shootSpeed: 30
+  shootSpeed: 8
