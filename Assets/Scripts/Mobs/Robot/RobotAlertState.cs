@@ -22,6 +22,9 @@ public class RobotAlertState : RobotBaseState
         Vector2 aimVector = target.position - robot.transform.position;
         float angle = Vector2.SignedAngle(Vector2.right, aimVector);
 
+        if (angle > 180 || angle < 0)
+            angle = 180;
+
         roboGun.transform.eulerAngles = new Vector3(0, 0f, angle);
     }
 

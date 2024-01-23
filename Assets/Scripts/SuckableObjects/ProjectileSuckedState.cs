@@ -11,14 +11,31 @@ public class ProjectileSuckedState : SuckableBase
     private Vector3 shrinkRate;
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        if(obj.GetProjectilePooledType() == ProjectilePooledType.Pooled)
-            RenderPlatformBoxUsability.Invoke(obj.GetUsabilityIndex(), Usability.Unusable);
+        if (obj.GetProjectilePooledType() == ProjectilePooledType.Pooled)
+            HandlePooledProjectileUsability(obj);
 
         obj.transform.localScale = obj.GetOriginalSize();
         boxSucked = false;
         suckPos = obj.GetSuckPosition();
 
         shrinkRate = obj.GetShrinkRate();
+    }
+
+    private void HandlePooledProjectileUsability(SuckableObjectStateManager obj)
+    {
+        switch (obj.GetProjectileType())
+        {
+            case ProjectileType.PlatformBox:
+                RenderPlatformBoxUsability.Invoke(obj.GetUsabilityIndex(), Usability.Unusable);
+                break;
+
+            case ProjectileType.RoboGunProjectile:
+                RenderRoboGunProjectileUsability.Invoke(obj.GetUsabilityIndex(), Usability.Unusable);
+                break;
+
+            default:
+                break;
+        }
     }
 
     public override void UpdateState(SuckableObjectStateManager obj)

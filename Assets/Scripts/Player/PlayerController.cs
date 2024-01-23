@@ -4,14 +4,19 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using Unity.VisualScripting;
 using System.Text;
+using System.Threading.Tasks;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("MOVEMENT")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float verticalJumpPower;
     [SerializeField] private float extraJumpFactor;
     [SerializeField] private float midairForwardAccelaration;
     [SerializeField] private float midairDecelaration;
+
+    [Header("HEALTH")]
+    [SerializeField] private float healthAmount;
 
     private Animator animator;
     private CapsuleCollider2D playerCollider;
@@ -25,9 +30,10 @@ public class PlayerController : MonoBehaviour
     private bool isJumping;
     private bool isAttacking;
 
-
     private PlayerState playerState;
     RaycastHit2D hit;
+
+    public PlayerHealth playerHealth;
 
     private void Awake()
     {
@@ -40,9 +46,11 @@ public class PlayerController : MonoBehaviour
         playerCollider = GetComponent<CapsuleCollider2D>();
         shootController = GetComponent<PlayerShootController>();
         animator = GetComponent<Animator>();
+
+        playerHealth = new PlayerHealth(healthAmount, GetComponent<SpriteRenderer>());
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         rb.velocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.velocity.y);
         animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
@@ -51,7 +59,7 @@ public class PlayerController : MonoBehaviour
     }
 
     #region Player Movement
-    public void PlayerMove(InputAction.CallbackContext context)
+    public void PlayerMove(InputAction.CallbackContext context) //Left and Right Movement
     {
         moveDirection = context.ReadValue<float>();
 
@@ -71,7 +79,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void PlayerJump(InputAction.CallbackContext context)
+    public void PlayerJump(InputAction.CallbackContext context) //Jumping
     {
         playerState = PlayerState.jumping;
 
@@ -111,7 +119,7 @@ public class PlayerController : MonoBehaviour
     }
     private void ResetForwardPower() => currentForwardPower = 1f;
 
-    private void CheckForFall()
+    private void CheckForFall() //Function to check grounded state in order to trigger proper animation transitions between jumping and falling
     {
         if (!IsGrounded() && rb.velocity.y != 0f)
         {
@@ -123,10 +131,10 @@ public class PlayerController : MonoBehaviour
             playerState = PlayerState.idle;
     }
 
-    private IEnumerator HaltPlayer()
+    private async void HaltPlayer() //Function to stop player movement during attacking or sucking
     {
         currentMoveSpeed = 0f;
-        yield return new WaitForSecondsRealtime(0.3f);
+        await Task.Delay(300);
         currentMoveSpeed = moveSpeed;
     }
 
@@ -150,7 +158,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (IsGrounded())
-            StartCoroutine(HaltPlayer());
+            HaltPlayer();
     }
 
     public void PlayerSuck(InputAction.CallbackContext context)
@@ -161,7 +169,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (IsGrounded())
-            StartCoroutine(HaltPlayer());
+            HaltPlayer();
     }
 
     public bool CheckIfAttacking()

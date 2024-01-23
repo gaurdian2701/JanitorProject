@@ -8,7 +8,7 @@ public class ObjectShooter : MonoBehaviour
     [SerializeField] private ProjectileType projectileType;
     [SerializeField] private Transform shootPos;
 
-    private void Awake()
+    private void OnEnable()
     {
         InvokeRepeating(nameof(ShootBox), 0f, shootFrequency);
     }
@@ -27,5 +27,10 @@ public class ObjectShooter : MonoBehaviour
             boxState.SetUsabilityIndex(tuple.Item2);    
             boxState.SwitchToShoot(shootPos);
         }
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke(nameof(ShootBox)); 
     }
 }

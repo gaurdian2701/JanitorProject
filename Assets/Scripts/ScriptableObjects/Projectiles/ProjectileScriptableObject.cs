@@ -11,4 +11,5 @@ public class ProjectileScriptableObject : ScriptableObject
     public ProjectileType projectileType;
     public float shrinkValue;
     public float shootSpeed;
+    public float damageAmount;
 }

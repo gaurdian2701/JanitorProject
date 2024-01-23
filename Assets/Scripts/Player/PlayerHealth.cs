@@ -2,32 +2,36 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class RobotHealth : IDamageable
+
+public class PlayerHealth : IDamageable
 {
-    private SpriteRenderer sprite;
-    private Color spriteOriginalColor;
     private float health;
     private float currentHealth;
-    private RobotStateManager robot;
-    public RobotHealth(SpriteRenderer _sprite, float _health, RobotStateManager _robot)
+    private SpriteRenderer sprite;
+    private Color spriteOriginalColor;
+
+    public static Action PlayerDead;
+
+    public PlayerHealth(float _health, SpriteRenderer _sprite) 
     {
-        sprite = _sprite;
         health = _health;
-        currentHealth = _health;
-        robot = _robot;
+        currentHealth = health;
+        sprite = _sprite;
         spriteOriginalColor = sprite.material.GetColor("_Color");
     }
-    public void TakeDamage(float damage)
+
+    public void TakeDamage(float _damage)
     {
         FlashRed();
-        currentHealth -= damage;
-        if (currentHealth <= 0)
+        currentHealth -= _damage;
+
+        if(currentHealth <= 0)
         {
+            Debug.Log("PLAYER DEAD");
             currentHealth = 0;
-            robot.OnDeath();
+            PlayerDead?.Invoke();
         }
     }
-
     private async void FlashRed()
     {
         sprite.material.color = Color.red;

@@ -7,6 +7,8 @@ public class RobotStateManager : MonoBehaviour
     [SerializeField] private GameObject roboGun;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask playerMask;
+    [SerializeField] private float robotHealthAmount;
+    [SerializeField] private Color fadeColor;
 
 
     RobotBaseState currentState;
@@ -34,36 +36,48 @@ public class RobotStateManager : MonoBehaviour
 
         roboGun.transform.rotation = Quaternion.identity;
 
-        robotHealth = new RobotHealth(this);
+        robotHealth = new RobotHealth(sprite, robotHealthAmount, this);
         roboShoot = GetComponent<ObjectShooter>();
     }
     private void Start()
     {
         currentState = idle;
         currentSpeed = moveSpeed;
-        currentState.EnterState(this);
+        currentState?.EnterState(this);
     }
 
     private void Update()
     {
-        currentState.UpdateState(this);
+        currentState?.UpdateState(this);
+    }
+
+    private void OnDisable()
+    {
+        sprite.color = fadeColor;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        currentState.OnTriggerEnter(collision, this);
+        currentState?.OnTriggerEnter(collision, this);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        currentState.OnTriggerExit(collision, this);
+        currentState?.OnTriggerExit(collision, this);
     }
     public void SwitchState(RobotBaseState robot)
     {
         currentState = robot;
-        currentState.EnterState(this);
+        currentState?.EnterState(this);
     }
 
+    public void OnDeath()
+    {
+        currentState = null;
+        roboShoot.enabled = false;
+        robotHealth = null;
+        this.enabled = false;
+    }
     public void SetRobotShooting(bool _activeState) { roboShoot.enabled = _activeState; }
     public Transform GetPlayerTransform() { return playerTransform; }
 
@@ -74,8 +88,6 @@ public class RobotStateManager : MonoBehaviour
     public LayerMask GetPlayerMask() { return playerMask; } 
     public GameObject GetRoboGun() { return roboGun; }
     public float GetCurrentSpeed(){ return currentSpeed;}
-
-    public SpriteRenderer GetSpriteRenderer() { return sprite; }
 
     public Animator GetAnimator() { return animator; }
 

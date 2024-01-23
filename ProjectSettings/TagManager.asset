@@ -19,7 +19,7 @@ TagManager:
   - EnemDetectionLayer
   - ProjectileHitBox
   - EnemyHurtBox
-  - 
+  - PlayerHurtBox
   - 
   - 
   - 

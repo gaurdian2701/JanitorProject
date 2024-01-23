@@ -6,6 +6,10 @@ public class ProjectileShotState : SuckableBase
     private Rigidbody2D rb;
     private Vector2 direction;
     private Transform shootPos;
+
+    private GameObject collidedObject;
+    private int layer;
+    
     public override void EnterState(SuckableObjectStateManager obj)
     {
         shootPos = obj.GetShootPosition();
@@ -15,9 +19,9 @@ public class ProjectileShotState : SuckableBase
         obj.transform.parent = null;
         obj.transform.localScale = obj.GetOriginalSize();
         obj.transform.rotation = Quaternion.identity;
+        obj.transform.right = direction;
 
         rb = obj.GetComponent<Rigidbody2D>();
-        //rb.constraints = Mathf.Abs((shootPos.transform.rotation.z * 180) % 180) == 0f ? RigidbodyConstraints2D.FreezePositionY : RigidbodyConstraints2D.FreezePositionX;
 
         obj.SetLauncher(null);
         obj.ToggleHitbox(true);
@@ -59,7 +63,13 @@ public class ProjectileShotState : SuckableBase
 
     public override void OnTriggerEnter(SuckableObjectStateManager obj, Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("EnemyHurtBox"))
-            collision.gameObject.transform.parent.GetComponent<RobotStateManager>().robotHealth.TakeDamage(0f);
+        collidedObject = collision.gameObject;
+        layer = collidedObject.layer;
+
+        if (layer == LayerMask.NameToLayer("EnemyHurtBox"))
+            collidedObject.transform.parent.GetComponent<RobotStateManager>().robotHealth?.TakeDamage(obj.GetProjectileDamage());
+
+        else if(layer == LayerMask.NameToLayer("PlayerHurtBox"))
+            collidedObject.transform.parent.GetComponent<PlayerController>().playerHealth?.TakeDamage(obj.GetProjectileDamage());
     }
 }

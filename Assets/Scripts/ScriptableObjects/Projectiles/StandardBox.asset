@@ -18,3 +18,4 @@ MonoBehaviour:
   projectileType: 0
   shrinkValue: 4
   shootSpeed: 30
+  damageAmount: 5

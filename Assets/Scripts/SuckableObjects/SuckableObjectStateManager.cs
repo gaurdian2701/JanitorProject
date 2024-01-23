@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class SuckableObjectStateManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class SuckableObjectStateManager : MonoBehaviour
     private SuckableBase currentState;
     private ObjectState startingState;
     private Vector3 shrinkRate;
+    private float projectileDamage;
 
     private ProjectilePooledType projectilePooledType;
     private ProjectileType projectileType;
@@ -29,17 +31,9 @@ public class SuckableObjectStateManager : MonoBehaviour
     public bool isSucked;
     private void Awake()
     {
-        isSucked = false;
-        shrinkRate = new Vector3(projectileSO.shrinkValue, projectileSO.shrinkValue, 0f);
-
-        shootSpeed = projectileSO.shootSpeed;
-        projectilePooledType = projectileSO.projectilePooledType;
-        projectileType = projectileSO.projectileType;
-        startingState = projectileSO.startingState;
-
         spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = projectileSO.projectileSprite;
 
+        InitializeValues();
         ChooseStartingState();
 
         if (currentState != null)
@@ -59,6 +53,17 @@ public class SuckableObjectStateManager : MonoBehaviour
         ChooseStartingState();
     }
 
+    private void InitializeValues()
+    {
+        spriteRenderer.sprite = projectileSO.projectileSprite;
+        shootSpeed = projectileSO.shootSpeed;
+        projectilePooledType = projectileSO.projectilePooledType;
+        projectileType = projectileSO.projectileType;
+        startingState = projectileSO.startingState;
+        projectileDamage = projectileSO.damageAmount;
+        shrinkRate = new Vector3(projectileSO.shrinkValue, projectileSO.shrinkValue, 0f);
+        isSucked = false;
+    }
     private void ChooseStartingState()
     {
         switch (startingState)
@@ -83,24 +88,22 @@ public class SuckableObjectStateManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (currentState != null)
-            currentState.UpdateState(this);
-        else
-            Debug.Log("NULL STATE SCRIPT EXECUTING");
+        currentState?.UpdateState(this);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        currentState.OnCollisionEnter(this, collision);
+        currentState?.OnCollisionEnter(this, collision);
     }
 
     //I have made sure through layer overrides that the hitbox only gets triggered when it enters an enemy's hurtbox.
     //But still I am adding a layer check just in case.
     private void OnTriggerEnter2D(Collider2D collision) 
     {
-        currentState.OnTriggerEnter(this, collision);
+        currentState?.OnTriggerEnter(this, collision);
     }
 
+    public float GetProjectileDamage() { return projectileDamage; }        
     public Vector3 GetShrinkRate() { return shrinkRate; }
     
     public Vector3 GetOriginalSize() { return originalSize; }
