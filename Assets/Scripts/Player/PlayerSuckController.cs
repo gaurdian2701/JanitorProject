@@ -30,14 +30,15 @@ public class PlayerSuckController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        obj = collision.gameObject.GetComponent<SuckableObjectStateManager>();
-
-
-        if (obj && !obj.isSucked && !ignore)
+        if (collision.gameObject.TryGetComponent<SuckableObjectStateManager>(out SuckableObjectStateManager obj) && !ignore)
         {
-            obj.SetLauncher(controller.gameObject);
-            obj.SwitchToSuck(suckPosition);
-            ignore = true;
+            obj.enabled = true;
+            if(!obj.isSucked)
+            {
+                obj.SetLauncher(controller.gameObject);
+                obj.SwitchToSuck(suckPosition);
+                ignore = true;
+            }
         }
     }
 
@@ -64,7 +65,6 @@ public class PlayerSuckController : MonoBehaviour
 
     //The following functions are so that this script can know the number of objects and then block the sucking collider from taking any more objects
     //once the limit has been reached.
-    //TODO: why not just handle this using a single event listener instead of having to call this every godddamn time an object gets sucked ffs.
     public void SetObjectLimit(int amount)
     {
         objectLimit = amount;

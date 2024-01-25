@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class ProjectileSuckedState : SuckableBase
 {
-    private bool boxSucked;
+    private bool projectileSucked;
     private Transform suckPos;
     private Vector3 shrinkRate;
     public override void EnterState(SuckableObjectStateManager obj)
@@ -15,7 +15,7 @@ public class ProjectileSuckedState : SuckableBase
             HandlePooledProjectileUsability(obj);
 
         obj.transform.localScale = obj.GetOriginalSize();
-        boxSucked = false;
+        projectileSucked = false;
         suckPos = obj.GetSuckPosition();
 
         shrinkRate = obj.GetShrinkRate();
@@ -40,7 +40,7 @@ public class ProjectileSuckedState : SuckableBase
 
     public override void UpdateState(SuckableObjectStateManager obj)
     {
-        if (boxSucked)
+        if (projectileSucked)
             return;
 
         obj.transform.Rotate(obj.transform.forward, 25f);
@@ -51,9 +51,9 @@ public class ProjectileSuckedState : SuckableBase
 
         else
         {
-            ObjectSucked.Invoke(obj.gameObject);
-            boxSucked = true;
+            projectileSucked = true;
             suckPos = null;
+            ObjectSucked?.Invoke(obj.gameObject);
         }
     }
 }

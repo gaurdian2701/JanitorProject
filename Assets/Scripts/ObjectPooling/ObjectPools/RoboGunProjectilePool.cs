@@ -6,15 +6,15 @@ using UnityEngine;
 public class RoboGunProjectilePool : ObjectPool
 {
     [SerializeField] private ProjectilePoolScriptableObject roboGunProjectilePoolSO;
-    protected override void Awake()
+    public RoboGunProjectilePool(ProjectilePoolScriptableObject roboGunProjectilePoolSO, ObjectPoolManager poolManager) : base(poolManager)
     {
         spawnablePrefab = roboGunProjectilePoolSO.spawnablePrefab;
         listSize = roboGunProjectilePoolSO.listSize;
-        base.Awake();
+        base.InitializeList();
         SuckableBase.RenderRoboGunProjectileUsability += ChangeUsability;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         SuckableBase.RenderRoboGunProjectileUsability -= ChangeUsability;
     }

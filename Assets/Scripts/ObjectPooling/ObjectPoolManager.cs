@@ -5,11 +5,18 @@ using UnityEngine;
 
 public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>
 {
-    [SerializeField] private ObjectPool platformBoxPool;
-    [SerializeField] private ObjectPool roboGunProjectilePool;
+    [SerializeField] private ProjectilePoolScriptableObject platformBoxProjectilePoolSO;
+    [SerializeField] private ProjectilePoolScriptableObject roboGunProjectilePoolSO;
+
+    private ObjectPool platformBoxPool;
+    private ObjectPool roboGunProjectilePool;
+  
     protected override void Awake()
     {
         base.Awake();
+
+        platformBoxPool = new PlatformBoxPool(platformBoxProjectilePoolSO, this);
+        roboGunProjectilePool = new RoboGunProjectilePool(roboGunProjectilePoolSO, this);
     }
 
     public Tuple<GameObject, int> GetProjectileFromPool(ProjectileType projectile)
@@ -31,5 +38,10 @@ public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>
         }
 
         return pooledObject;
+    }
+
+    public GameObject InstantiateProjectile(GameObject spawnablePrefab) 
+    {
+        return Instantiate(spawnablePrefab);
     }
 }

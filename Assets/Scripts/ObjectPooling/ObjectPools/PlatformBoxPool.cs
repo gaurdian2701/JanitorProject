@@ -5,16 +5,15 @@ using UnityEngine;
 
 public class PlatformBoxPool : ObjectPool
 {
-    [SerializeField] private ProjectilePoolScriptableObject platformBoxPoolSO;
-    protected override void Awake()
+    public PlatformBoxPool(ProjectilePoolScriptableObject platformBoxPoolSO, ObjectPoolManager poolManager) : base(poolManager)
     {
         spawnablePrefab = platformBoxPoolSO.spawnablePrefab;
         listSize = platformBoxPoolSO.listSize;
-        base.Awake();
+        InitializeList();
         SuckableBase.RenderPlatformBoxUsability += ChangeUsability;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         SuckableBase.RenderPlatformBoxUsability -= ChangeUsability;
     }

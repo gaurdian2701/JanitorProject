@@ -88,6 +88,7 @@ public class SuckableObjectStateManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.Log("update");
         currentState?.UpdateState(this);
     }
 

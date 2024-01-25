@@ -3,27 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPool
 {
+    private ObjectPoolManager poolManager;
+
     protected GameObject spawnablePrefab;
     protected int listSize;
+
     public List<Tuple<GameObject, int>> objectList;
     public List<Usability> usabilityList;
 
-    protected virtual void Awake()
+    public ObjectPool(ObjectPoolManager _poolManager)
     {
-        InitializeList();
+        poolManager = _poolManager;
     }
-
     protected virtual void ChangeUsability(int i, Usability usability) { }
 
-    private void InitializeList()
+    protected void InitializeList()
     {
         objectList = new List<Tuple<GameObject, int>>(listSize);
+        usabilityList = new List<Usability>(listSize);
 
         for (int i = 0; i < objectList.Capacity; i++)
         {
-            GameObject obj = Instantiate(spawnablePrefab);
+            GameObject obj = poolManager.InstantiateProjectile(spawnablePrefab);
             obj.SetActive(false);
             var t = new Tuple<GameObject, int>(obj, i);
             objectList.Add(t);
