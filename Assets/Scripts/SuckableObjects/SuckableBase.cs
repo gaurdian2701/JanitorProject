@@ -3,9 +3,9 @@ using UnityEngine;
 
 public abstract class SuckableBase
 {
-    public static Action<GameObject> ObjectSucked;
+    public static Action<SuckableObjectStateManager> ObjectSucked;
     public static Action<int, Usability> RenderPlatformBoxUsability;
-    public static Action<int, Usability> RenderRoboGunProjectileUsability;
+    public static Action<int, Usability> RenderRoboGunProjectileUsability; //Usability events to render global usability of pooled projectiles
     public abstract void EnterState(SuckableObjectStateManager obj);
 
     public virtual void UpdateState(SuckableObjectStateManager obj) { }

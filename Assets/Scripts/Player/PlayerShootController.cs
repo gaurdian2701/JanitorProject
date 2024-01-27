@@ -13,6 +13,8 @@ public class PlayerShootController : MonoBehaviour
     [SerializeField] private bool canShoot;
     [SerializeField] private Transform shootPos;
 
+    public Action ObjectShot;
+
     private void Awake()
     {
         SuckableBase.ObjectSucked += HandleSuckedObjects;
@@ -33,11 +35,11 @@ public class PlayerShootController : MonoBehaviour
         suckedObjects.Clear();
     }
 
-    private void HandleSuckedObjects(GameObject obj)
+    private void HandleSuckedObjects(SuckableObjectStateManager obj)
     {
-        DisableComponents(obj);
+        DisableComponents(obj.gameObject);
         obj.transform.parent = transform;
-        suckedObjects.Add(obj);
+        suckedObjects.Add(obj.gameObject);
 
         playerColliderManager.SetObjectCount(suckedObjects.Count);
     }

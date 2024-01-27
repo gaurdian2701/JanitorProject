@@ -5,6 +5,7 @@ using UnityEngine;
 using Unity.VisualScripting;
 using System.Text;
 using System.Threading.Tasks;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,7 +27,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private float moveDirection;
     private float currentMoveSpeed;
-    private PlayerShootController shootController;
     private bool isJumping;
     private bool isAttacking;
 
@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
     RaycastHit2D hit;
 
     public PlayerHealth playerHealth;
+    private PlayerShootController shootController;
+    private PlayerStatusHandler playerStatusHandler;
 
     private void Awake()
     {
@@ -48,7 +50,26 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         playerHealth = new PlayerHealth(healthAmount, GetComponent<SpriteRenderer>());
+        playerStatusHandler = new PlayerStatusHandler(this, shootController);
+
+        PlayerHealthHandler.PlayerDied += HandlePlayerDeath;
+        KillZone.PlayerFell += HandlePlayerDeath;
     }
+
+    private void OnDisable()
+    {
+        PlayerHealthHandler.PlayerDied -= HandlePlayerDeath;
+        KillZone.PlayerFell -= HandlePlayerDeath;
+    }
+
+    private void HandlePlayerDeath()
+    {
+        playerStatusHandler.Disable();
+        this.gameObject.SetActive(false);
+    }
+
+    public float GetMoveSpeed() { return moveSpeed; }
+    public void SetMoveSpeed(float _speed) => currentMoveSpeed = _speed;
 
     private void FixedUpdate()
     {
@@ -182,4 +203,5 @@ public class PlayerController : MonoBehaviour
         isAttacking = !isAttacking;
     }
     #endregion
+
 }

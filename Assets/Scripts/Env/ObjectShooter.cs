@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObjectShooter : MonoBehaviour
 {
     [SerializeField] private float shootFrequency;
-    [SerializeField] private ProjectileType projectileType;
+    [SerializeField] private ProjectileType projectileRequired;
     [SerializeField] private Transform shootPos;
 
     private void OnEnable()
@@ -15,7 +15,8 @@ public class ObjectShooter : MonoBehaviour
 
     private void ShootBox()
     {
-        var tuple = ObjectPoolManager.Instance.GetProjectileFromPool(projectileType);
+        var tuple = ObjectPoolManager.Instance.GetProjectileFromPool(projectileRequired);
+        Debug.Log(tuple.ToString());
         if (tuple == null)
             return;
 

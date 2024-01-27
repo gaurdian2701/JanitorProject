@@ -74,7 +74,7 @@ public class RobotStateManager : MonoBehaviour
     public void OnDeath()
     {
         currentState = null;
-        roboShoot.enabled = false;
+        SetRobotShooting(false);
         robotHealth = null;
         this.enabled = false;
     }

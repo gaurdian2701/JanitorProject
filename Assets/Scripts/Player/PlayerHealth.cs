@@ -5,17 +5,12 @@ using UnityEngine;
 
 public class PlayerHealth : IDamageable
 {
-    private float health;
-    private float currentHealth;
     private SpriteRenderer sprite;
     private Color spriteOriginalColor;
-
-    public static Action PlayerDead;
+    public static Action<float> PlayerDamaged;
 
     public PlayerHealth(float _health, SpriteRenderer _sprite) 
     {
-        health = _health;
-        currentHealth = health;
         sprite = _sprite;
         spriteOriginalColor = sprite.material.GetColor("_Color");
     }
@@ -23,14 +18,7 @@ public class PlayerHealth : IDamageable
     public void TakeDamage(float _damage)
     {
         FlashRed();
-        currentHealth -= _damage;
-
-        if(currentHealth <= 0)
-        {
-            Debug.Log("PLAYER DEAD");
-            currentHealth = 0;
-            PlayerDead?.Invoke();
-        }
+        PlayerDamaged?.Invoke(_damage);
     }
     private async void FlashRed()
     {

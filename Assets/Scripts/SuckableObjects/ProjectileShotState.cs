@@ -69,7 +69,12 @@ public class ProjectileShotState : SuckableBase
         if (layer == LayerMask.NameToLayer("EnemyHurtBox"))
             collidedObject.transform.parent.GetComponent<RobotStateManager>().robotHealth?.TakeDamage(obj.GetProjectileDamage());
 
-        else if(layer == LayerMask.NameToLayer("PlayerHurtBox"))
+        else if (layer == LayerMask.NameToLayer("PlayerHurtBox"))
+        {
             collidedObject.transform.parent.GetComponent<PlayerController>().playerHealth?.TakeDamage(obj.GetProjectileDamage());
+            StatusManager.ApplyStatus(Status.SlowDown);
+        }
+
+        obj.gameObject.SetActive(false);
     }
 }

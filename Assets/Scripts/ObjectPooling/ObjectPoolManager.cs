@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>
+public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>  //GenericMonoSingleton base class for all Singletons in the game
 {
     [SerializeField] private ProjectilePoolScriptableObject platformBoxProjectilePoolSO;
     [SerializeField] private ProjectilePoolScriptableObject roboGunProjectilePoolSO;
@@ -16,10 +16,10 @@ public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>
         base.Awake();
 
         platformBoxPool = new PlatformBoxPool(platformBoxProjectilePoolSO, this);
-        roboGunProjectilePool = new RoboGunProjectilePool(roboGunProjectilePoolSO, this);
+        roboGunProjectilePool = new RoboGunProjectilePool(roboGunProjectilePoolSO, this); //Initialization of different projectile pools
     }
 
-    public Tuple<GameObject, int> GetProjectileFromPool(ProjectileType projectile)
+    public Tuple<GameObject, int> GetProjectileFromPool(ProjectileType projectile) //Returns a projectile from respective pool depending on projectileType
     {
         Tuple<GameObject, int> pooledObject; 
         switch (projectile)
