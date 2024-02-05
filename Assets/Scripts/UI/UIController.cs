@@ -31,7 +31,6 @@ public class UIController : MonoBehaviour
         EventService.Instance.OnGamePaused.AddEventListener(HandlePauseEvent);
         EventService.Instance.OnLevelComplete.AddEventListener(HandleLevelCompleteEvent);
 
-        Debug.Log("MainUI: " + heartUI.Count);
         playerHealthUI = new PlayerHealthUIHandler(heartUI);
         suckedObjectsUI = new SuckedObjectsUI(suckedObjects);
     }

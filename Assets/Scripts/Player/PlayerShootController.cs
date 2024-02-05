@@ -35,7 +35,6 @@ public class PlayerShootController : MonoBehaviour
 
     private void HandleSuckedObjects(SuckableObjectStateManager obj)
     {
-        Debug.Log("handling shooting");
         DisableComponents(obj.gameObject);
         obj.transform.parent = transform;
         suckedObjects.Add(obj);

@@ -23,8 +23,6 @@ public class PlayerHealthUIHandler
     private void DecreaseHearts(float damage)
     {
         damage /= 100;
-        Debug.Log("list count: " + heartUI.Count);
-        Debug.Log("image index: " + imageIndex);
         Image heart = heartUI[imageIndex];
         heart.fillAmount -= damage;
 
