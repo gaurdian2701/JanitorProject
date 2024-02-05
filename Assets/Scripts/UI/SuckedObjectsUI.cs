@@ -4,22 +4,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SuckedObjectsUI : MonoBehaviour
+public class SuckedObjectsUI
 {
     [SerializeField] private List<Image> suckedObjects;
+    private int UIIndex;
 
-    private void Awake()
+    public SuckedObjectsUI(List<Image> _suckedObjects)
     {
-        SuckableBase.ObjectSucked += UpdateObjectUI;
+        suckedObjects = _suckedObjects;
+        UIIndex = 0;
+        EventService.Instance.OnObjectSucked.AddEventListener(AddObjectToUI);
+        EventService.Instance.OnObjectShot.AddEventListener(RemoveObjectFromUI);
     }
 
-    private void OnDisable()
+    public void Cleanup()
     {
-        SuckableBase.ObjectSucked -= UpdateObjectUI;
+        EventService.Instance.OnObjectSucked.RemoveEventListener(AddObjectToUI);
+        EventService.Instance.OnObjectShot.RemoveEventListener(RemoveObjectFromUI);
+        suckedObjects.Clear();
     }
 
-    private void UpdateObjectUI(SuckableObjectStateManager obj)
+    private void RemoveObjectFromUI()
     {
-        suckedObjects[0].sprite = obj.GetSprite();
+        if (UIIndex > 0)
+            UIIndex--;
+
+        suckedObjects[UIIndex].sprite = null;
+    }
+
+    private void AddObjectToUI(SuckableObjectStateManager obj)
+    {
+        if (obj == null)
+            return;
+
+        suckedObjects[UIIndex].sprite = obj.GetSprite();
+        UIIndex++;
     }
 }

@@ -53,9 +53,9 @@ public class ProjectileSuckedState : SuckableBase
         else
         {
             projectileSucked = true; 
-            suckPos = null; 
-            ObjectSucked?.Invoke(obj); //This event is subscribed to by the Shooter script of the Player which would then handle the addition of the 
-                                       //object to the list of sucked objects
+            suckPos = null;
+            EventService.Instance.OnObjectSucked.InvokeEvent(obj); //This event is subscribed to by the Shooter script of the Player which would then handle the addition
+                                                                  //of the object to the list of sucked objects
         }
     }
 }

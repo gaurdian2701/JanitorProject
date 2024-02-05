@@ -5,12 +5,9 @@ using UnityEngine;
 
 public class KillZone : MonoBehaviour
 {
-    public static Action PlayerFell;
-
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.GetComponent<PlayerController>())
-            PlayerFell?.Invoke();
+            EventService.Instance.OnPlayerDied.InvokeEvent();
     }
 }

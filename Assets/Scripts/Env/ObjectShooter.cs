@@ -7,6 +7,7 @@ public class ObjectShooter : MonoBehaviour
     [SerializeField] private float shootFrequency;
     [SerializeField] private ProjectileType projectileRequired;
     [SerializeField] private Transform shootPos;
+    [SerializeField] private ObjectPoolManager objectPoolManager;
 
     private void OnEnable()
     {
@@ -15,8 +16,7 @@ public class ObjectShooter : MonoBehaviour
 
     private void ShootBox()
     {
-        var tuple = ObjectPoolManager.Instance.GetProjectileFromPool(projectileRequired);
-        Debug.Log(tuple.ToString());
+        var tuple = objectPoolManager.GetProjectileFromPool(projectileRequired);
         if (tuple == null)
             return;
 

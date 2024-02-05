@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>  //GenericMonoSingleton base class for all Singletons in the game
+public class ObjectPoolManager : MonoBehaviour  //GenericMonoSingleton base class for all Singletons in the game
 {
     [SerializeField] private ProjectilePoolScriptableObject platformBoxProjectilePoolSO;
     [SerializeField] private ProjectilePoolScriptableObject roboGunProjectilePoolSO;
@@ -11,10 +11,8 @@ public class ObjectPoolManager : GenericMonoSingleton<ObjectPoolManager>  //Gene
     private ObjectPool platformBoxPool;
     private ObjectPool roboGunProjectilePool;
   
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         platformBoxPool = new PlatformBoxPool(platformBoxProjectilePoolSO, this);
         roboGunProjectilePool = new RoboGunProjectilePool(roboGunProjectilePoolSO, this); //Initialization of different projectile pools
     }

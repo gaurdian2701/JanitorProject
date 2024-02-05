@@ -16,6 +16,7 @@ MonoBehaviour:
   startingState: 1
   projectilePooledType: 0
   projectileType: 1
+  statusApplied: 3
   shrinkValue: 4
   shootSpeed: 10
   damageAmount: 4

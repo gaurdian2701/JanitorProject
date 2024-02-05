@@ -9,16 +9,14 @@ public class PlayerShootController : MonoBehaviour
     [SerializeField] private int objectNumber;
 
     private PlayerSuckController playerColliderManager;
-    [SerializeField] private List<GameObject> suckedObjects;
+    [SerializeField] private List<SuckableObjectStateManager> suckedObjects;
     [SerializeField] private bool canShoot;
     [SerializeField] private Transform shootPos;
 
-    public Action ObjectShot;
-
     private void Awake()
     {
-        SuckableBase.ObjectSucked += HandleSuckedObjects;
-        suckedObjects = new List<GameObject>();
+        EventService.Instance.OnObjectSucked.AddEventListener(HandleSuckedObjects);
+        suckedObjects = new List<SuckableObjectStateManager>();
         playerColliderManager = GetComponent<PlayerSuckController>();
 
         canShoot = true;
@@ -31,15 +29,16 @@ public class PlayerShootController : MonoBehaviour
 
     private void OnDestroy()
     {
-        SuckableBase.ObjectSucked -= HandleSuckedObjects;
+        EventService.Instance.OnObjectSucked.RemoveEventListener(HandleSuckedObjects);
         suckedObjects.Clear();
     }
 
     private void HandleSuckedObjects(SuckableObjectStateManager obj)
     {
+        Debug.Log("handling shooting");
         DisableComponents(obj.gameObject);
         obj.transform.parent = transform;
-        suckedObjects.Add(obj.gameObject);
+        suckedObjects.Add(obj);
 
         playerColliderManager.SetObjectCount(suckedObjects.Count);
     }
@@ -60,11 +59,12 @@ public class PlayerShootController : MonoBehaviour
         if (SuckedObjectsListEmpty() || !canShoot)
             return;
 
-        GameObject obj = suckedObjects[suckedObjects.Count - 1];
+        SuckableObjectStateManager obj = suckedObjects[suckedObjects.Count - 1];
 
-        EnableComponents(obj);
-        obj.GetComponent<SuckableObjectStateManager>().SwitchToShoot(shootPos);
+        EnableComponents(obj.gameObject);
+        obj.SwitchToShoot(shootPos);
         suckedObjects.Remove(obj);
+        EventService.Instance.OnObjectShot.InvokeEvent();
 
         playerColliderManager.SetObjectCount(suckedObjects.Count);
     }

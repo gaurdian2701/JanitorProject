@@ -3,26 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : GenericMonoSingleton<LevelManager>
 {
-    private static LevelManager instance;
-
-    public static LevelManager Instance { get { return instance; } }
-
-    [SerializeField] private LevelLoader levelLoader;
-
-    private void Awake()
+    protected override void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        else
-            Destroy(gameObject);
+        base.Awake();
     }
-
     private void Start()
     {
         if (GetLevelStatus("Level1") == LevelStatus.Locked)

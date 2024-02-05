@@ -1,11 +1,12 @@
+using System.Collections;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 public class PlayerStatusHandler
 {
     private PlayerShootController shootController;
     private PlayerController playerController;
-
     private float playerOriginalSpeed;
 
     public PlayerStatusHandler(PlayerController _playerController, PlayerShootController _shootController)
@@ -13,11 +14,11 @@ public class PlayerStatusHandler
         shootController = _shootController;
         playerController = _playerController;
         playerOriginalSpeed = playerController.GetMoveSpeed();
-        StatusManager.ApplyStatus += StatusHandler;
+        EventService.Instance.OnApplyStatus.AddEventListener(StatusHandler);
     }
     public void Disable()
     {
-        StatusManager.ApplyStatus -= StatusHandler;
+        EventService.Instance.OnApplyStatus.RemoveEventListener(StatusHandler);
     }
 
     private void StatusHandler(Status status)
@@ -34,7 +35,7 @@ public class PlayerStatusHandler
 
             case Status.SlowDown:
                 playerController.SetMoveSpeed(playerOriginalSpeed/2);
-                WaitForStatusTime(status, 3000);
+                WaitForStatusTime(Status.SlowDown, 3000);
                 break;
 
             default: 
@@ -44,7 +45,6 @@ public class PlayerStatusHandler
 
     private void RemoveStatus(Status status)
     {
-        Debug.Log("Remove Status");
         switch (status)
         {
             case Status.SlowDown:

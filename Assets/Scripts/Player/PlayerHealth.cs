@@ -1,29 +1,20 @@
 using System;
-using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 
 
 public class PlayerHealth : IDamageable
 {
-    private SpriteRenderer sprite;
-    private Color spriteOriginalColor;
-    public static Action<float> PlayerDamaged;
+    private PlayerController controller;
 
-    public PlayerHealth(float _health, SpriteRenderer _sprite) 
+    public PlayerHealth(PlayerController _controller) 
     {
-        sprite = _sprite;
-        spriteOriginalColor = sprite.material.GetColor("_Color");
+        controller = _controller;
     }
 
     public void TakeDamage(float _damage)
     {
-        FlashRed();
-        PlayerDamaged?.Invoke(_damage);
-    }
-    private async void FlashRed()
-    {
-        sprite.material.color = Color.red;
-        await Task.Delay(150);
-        sprite.material.color = spriteOriginalColor;
+        EventService.Instance.OnPlayerDamaged.InvokeEvent(_damage);
+        controller.InitiateCoroutine(PLayerCoroutineType.InitiateDamageFlash);
     }
 }

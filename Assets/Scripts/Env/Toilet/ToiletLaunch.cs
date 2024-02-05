@@ -17,8 +17,8 @@ public class ToiletLaunch : MonoBehaviour
     {
         player = collision.GetComponent<PlayerController>();
 
-        if(player)
-            StatusManager.ApplyStatus.Invoke(Status.CannotShoot);
+        if (player)
+            EventService.Instance.OnApplyStatus.InvokeEvent(Status.CannotShoot);
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -37,7 +37,7 @@ public class ToiletLaunch : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<PlayerController>())
         {
-            StatusManager.ApplyStatus.Invoke(Status.CanShoot);
+            EventService.Instance.OnApplyStatus.InvokeEvent(Status.CanShoot);
             player = null;
         }
     }
