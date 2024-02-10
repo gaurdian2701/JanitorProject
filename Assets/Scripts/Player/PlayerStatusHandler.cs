@@ -1,14 +1,24 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
-public class PlayerStatusHandler : MonoBehaviour
+public class PlayerStatusHandler
 {
-    private ShootController shootController;
-    private void Awake()
+    private PlayerShootController shootController;
+    private PlayerController playerController;
+    private float playerOriginalSpeed;
+
+    public PlayerStatusHandler(PlayerController _playerController, PlayerShootController _shootController)
     {
-        shootController = GetComponent<ShootController>();
-        StatusManager.ApplyStatus += StatusHandler;
+        shootController = _shootController;
+        playerController = _playerController;
+        playerOriginalSpeed = playerController.GetMoveSpeed();
+        EventService.Instance.OnApplyStatus.AddEventListener(StatusHandler);
+    }
+    public void Disable()
+    {
+        EventService.Instance.OnApplyStatus.RemoveEventListener(StatusHandler);
     }
 
     private void StatusHandler(Status status)
@@ -23,8 +33,31 @@ public class PlayerStatusHandler : MonoBehaviour
                 shootController.SetShootCondition(true);
                 break;
 
+            case Status.SlowDown:
+                playerController.SetMoveSpeed(playerOriginalSpeed/2);
+                WaitForStatusTime(Status.SlowDown, 3000);
+                break;
+
             default: 
                 break;
         }
+    }
+
+    private void RemoveStatus(Status status)
+    {
+        switch (status)
+        {
+            case Status.SlowDown:
+                playerController.SetMoveSpeed(playerOriginalSpeed);
+                break;
+
+            default:
+                break;
+        }
+    }
+    private async void WaitForStatusTime(Status status, int millisecs)
+    {
+        await Task.Delay(millisecs);
+        RemoveStatus(status);
     }
 }
