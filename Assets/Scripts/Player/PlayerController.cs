@@ -4,72 +4,91 @@ using UnityEngine.InputSystem;
 using UnityEngine;
 using Unity.VisualScripting;
 using System.Text;
+using System.Threading.Tasks;
+using System;
+using UnityEngine.U2D;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
+    [Header("MOVEMENT")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float verticalJumpPower;
+    [SerializeField] private float extraJumpFactor;
     [SerializeField] private float midairForwardAccelaration;
     [SerializeField] private float midairDecelaration;
-    [SerializeField] private CapsuleCollider2D playerCollider;
+
+    [Header("HEALTH")]
+    [SerializeField] private float healthAmount;
+
+    private Animator animator;
+    private CapsuleCollider2D playerCollider;
+    private SpriteRenderer spriteRenderer;
+
 
     private float currentForwardPower = 1f;
     private Rigidbody2D rb;
     private float moveDirection;
     private float currentMoveSpeed;
-    private SuckedObjectsController suckerController;
     private bool isJumping;
-
-    private enum PlayerState
-    {
-        idle,
-        walking,
-        falling,
-        jumping,
-        attacking,
-        sucking
-    };
+    private bool isAttacking;
+    private bool isPaused;
+    private Color spriteOriginalColor;
 
     private PlayerState playerState;
+    RaycastHit2D hit;
 
-    void Start()
+    public PlayerHealth playerHealth;
+    private PlayerShootController shootController;
+    private PlayerStatusHandler playerStatusHandler;
+
+    private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        playerCollider = GetComponent<CapsuleCollider2D>();     
         playerState = PlayerState.idle;
         currentMoveSpeed = moveSpeed;
-        suckerController = GetComponent<SuckedObjectsController>();
         isJumping = false;
+        isAttacking = false;
+        isPaused = false;
+
+        rb = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<CapsuleCollider2D>();
+        shootController = GetComponent<PlayerShootController>();
+        animator = GetComponent<Animator>();
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteOriginalColor = spriteRenderer.material.GetColor("_Color");
+
+        playerHealth = new PlayerHealth(this);
+        playerStatusHandler = new PlayerStatusHandler(this, shootController);
+
+        EventService.Instance.OnPlayerDied.AddEventListener(HandlePlayerDeath);
     }
 
-    public Transform GetAttachments(PlayerChildren.Children child)
+    private void OnDisable()
     {
-        return transform.GetChild((int)child);
+        EventService.Instance.OnPlayerDied.RemoveEventListener(HandlePlayerDeath);
     }
 
-    void FixedUpdate()
+    private void HandlePlayerDeath()
+    {
+        playerStatusHandler.Disable();
+        this.gameObject.SetActive(false);
+    }
+
+    public float GetMoveSpeed() { return moveSpeed; }
+    public void SetMoveSpeed(float _speed) => currentMoveSpeed = _speed;
+
+    private void FixedUpdate()
     {
         rb.velocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.velocity.y);
         animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
         CheckForFall();
+        animator.SetInteger("PlayerState", (int)playerState);
     }
 
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.green;
-        RaycastHit2D rayhit = Physics2D.Raycast(playerCollider.bounds.center, -transform.up, 1.3f, LayerMask.GetMask("Platform"));
-        Gizmos.DrawRay(playerCollider.bounds.center, -transform.up);
-
-        if (rayhit)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(playerCollider.bounds.center, -transform.up);
-        }
-    }
-
-    public void PlayerMove(InputAction.CallbackContext context)
+    #region Player Movement
+    public void PlayerMove(InputAction.CallbackContext context) //Left and Right Movement
     {
         moveDirection = context.ReadValue<float>();
 
@@ -89,6 +108,79 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void PlayerJump(InputAction.CallbackContext context) //Jumping
+    {
+        playerState = PlayerState.jumping;
+
+        if (isJumping)
+            return;
+
+        if (context.performed && IsGrounded())
+            ExecuteJump(verticalJumpPower);
+
+        else if (context.performed && !IsGrounded() && !shootController.SuckedObjectsListEmpty())
+        {
+            ExecuteJump(verticalJumpPower * extraJumpFactor);
+            shootController.ReleaseSuckedObjects();
+        }
+    }
+
+    public void PauseGame(InputAction.CallbackContext context) //Pause Game
+    {
+        if (context.performed)
+        {
+            isPaused = isPaused ? false : true;
+            EventService.Instance.OnGamePaused.InvokeEvent(isPaused);
+        }
+    }
+
+    public IEnumerator JumpingToggle()
+    {
+        isJumping = true;
+        yield return new WaitForSecondsRealtime(0.2f);
+        isJumping = false;
+    }
+
+    private void ExecuteJump(float jumpPower)
+    {
+        rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+        currentForwardPower = midairForwardAccelaration;
+    }
+
+    private void DecreaseForwardPower()
+    {
+        if (currentForwardPower <= 1f)
+            ResetForwardPower();
+
+        else
+            currentForwardPower -= midairDecelaration;
+    }
+    private void ResetForwardPower() => currentForwardPower = 1f;
+
+    private void CheckForFall() //Function to check grounded state in order to trigger proper animation transitions between jumping and falling
+    {
+        if (!IsGrounded() && rb.velocity.y != 0f)
+        {
+            playerState = rb.velocity.y < 0f ? PlayerState.falling : PlayerState.jumping;
+            DecreaseForwardPower();
+        }
+
+        else if (IsGrounded())
+            playerState = PlayerState.idle;
+    }
+
+    private bool IsGrounded()
+    {
+        hit = Physics2D.CircleCast(playerCollider.bounds.center, 0.3f, -transform.up, 1.3f, LayerMask.GetMask("Ground"));
+        if (hit)
+            return true;
+
+        return false;
+
+    }
+    #endregion
+
+    #region Player Attack
     public void PlayerAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -96,8 +188,22 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("PlayerAttacked");
         }
 
-        if(IsGrounded())
-            StartCoroutine(HaltPlayer());
+        if (IsGrounded())
+            InitiateCoroutine(PLayerCoroutineType.HaltPlayer);
+    }
+
+    public void InitiateCoroutine(PLayerCoroutineType routine)
+    {
+        switch (routine)
+        {
+            case PLayerCoroutineType.HaltPlayer:
+                HaltPlayer(300); break;
+
+            case PLayerCoroutineType.InitiateDamageFlash:
+                FlashColor(150, Color.red); break;
+
+            default: break;
+        }
     }
 
     public void PlayerSuck(InputAction.CallbackContext context)
@@ -107,84 +213,35 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("PlayerSucked");
         }
 
-        if(IsGrounded())
-            StartCoroutine(HaltPlayer());
+        if (IsGrounded())
+            InitiateCoroutine(PLayerCoroutineType.HaltPlayer);
     }
 
-    public void PlayerJump(InputAction.CallbackContext context)
+    public bool CheckIfAttacking()
     {
-        playerState = PlayerState.jumping;
-
-        if (isJumping)
-            return;
-
-        if (context.performed && IsGrounded())
-            ExecuteJump();
-
-        else if (context.performed && !IsGrounded() && !suckerController.SuckedObjectsListEmpty())
-        {
-            ExecuteJump();
-            suckerController.ReleaseSuckedObjects();
-        }
+        return isAttacking;
     }
 
-    public IEnumerator jumpingToggle()
+    public void ToggleAttackState()
     {
-        isJumping = true;
-        yield return new WaitForSecondsRealtime(0.1f);
-        isJumping = false;
+        isAttacking = !isAttacking;
     }
+    #endregion
 
-    private void ExecuteJump()
+    #region Coroutines
+
+    private async void FlashColor(int time, Color color) //Flashes the player sprite in a certain color
     {
-        rb.velocity = new Vector2(rb.velocity.x, verticalJumpPower);
-        currentForwardPower = midairForwardAccelaration;
+        spriteRenderer.material.color = color;
+        await Task.Delay(time);
+        spriteRenderer.material.color = spriteOriginalColor;
     }
 
-    void ResetAnimationTriggers()
-    {
-        animator.Rebind();
-        animator.ResetTrigger("PlayerAttacked");
-        animator.ResetTrigger("PlayerSucked");
-    }
-
-    void DecreaseForwardPower()
-    {
-        if (currentForwardPower <= 1f)
-            ResetForwardPower();
-
-        else
-            currentForwardPower -= midairDecelaration;
-    }
-    void ResetForwardPower() => currentForwardPower = 1f;
-
-    void CheckForFall()
-    {
-        if (!IsGrounded() && rb.velocity.y < -0.1f)
-        {
-            playerState = PlayerState.falling;
-            DecreaseForwardPower();
-        }
-
-        else if (IsGrounded())
-            playerState = PlayerState.idle;
-
-        animator.SetInteger("PlayerState", (int)playerState);
-    }
-
-    private IEnumerator HaltPlayer()
+    private async void HaltPlayer(int time) //Function to stop player movement while shooting or sucking
     {
         currentMoveSpeed = 0f;
-        yield return new WaitForSecondsRealtime(0.5f);
+        await Task.Delay(time);
         currentMoveSpeed = moveSpeed;
     }
-
-    bool IsGrounded()
-    {
-        if (Physics2D.Raycast(playerCollider.bounds.center, -transform.up, 1.3f, LayerMask.GetMask("Platform")))
-            return true;
-
-        return false;
-
-    }
+    #endregion
 }
