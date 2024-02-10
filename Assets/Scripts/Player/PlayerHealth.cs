@@ -15,6 +15,6 @@ public class PlayerHealth : IDamageable
     public void TakeDamage(float _damage)
     {
         EventService.Instance.OnPlayerDamaged.InvokeEvent(_damage);
-        controller.InitiateCoroutine(PLayerCoroutineType.InitiateDamageFlash);
+        controller.InitiateCoroutine(PLayerCoroutineType.InitiateDamageFlash); //Initiate red flash when taking damage
     }
 }

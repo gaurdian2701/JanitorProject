@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Class for handling UI related to objects that the player has sucked so that the player knows what objects they have sucked inside
 public class SuckedObjectsUI
 {
     [SerializeField] private List<Image> suckedObjects;

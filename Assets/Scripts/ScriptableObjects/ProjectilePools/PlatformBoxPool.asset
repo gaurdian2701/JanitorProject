@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: PlatformBoxPool
   m_EditorClassIdentifier: 
   spawnablePrefab: {fileID: 5923430873650927866, guid: 12566bed4b390414c8e590dd98fb9850, type: 3}
-  listSize: 10
+  listSize: 20
