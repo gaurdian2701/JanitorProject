@@ -21,7 +21,7 @@ public class PlayerStatusHandler
         EventService.Instance.OnApplyStatus.RemoveEventListener(StatusHandler);
     }
 
-    private void StatusHandler(Status status)
+    private void StatusHandler(Status status) //Function for applying different statuses to the player
     {
         switch (status)
         {
@@ -43,8 +43,8 @@ public class PlayerStatusHandler
         }
     }
 
-    private void RemoveStatus(Status status)
-    {
+    private void RemoveStatus(Status status) //Function to remove time-dpeendant statuses
+    { 
         switch (status)
         {
             case Status.SlowDown:

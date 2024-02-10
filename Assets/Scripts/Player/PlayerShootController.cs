@@ -24,7 +24,8 @@ public class PlayerShootController : MonoBehaviour
 
     private void Start()
     {
-        playerColliderManager.SetObjectLimit(objectNumber);
+        //This is to ensure that the suck collider enabled during the sucking animation doesn't unnecesarily suck objects beyond the limit specified
+        playerColliderManager.SetObjectLimit(objectNumber); 
     }
 
     private void OnDestroy()
@@ -33,7 +34,7 @@ public class PlayerShootController : MonoBehaviour
         suckedObjects.Clear();
     }
 
-    private void HandleSuckedObjects(SuckableObjectStateManager obj)
+    private void HandleSuckedObjects(SuckableObjectStateManager obj) //Adds sucked objects to list and disables them until they are shot out
     {
         DisableComponents(obj.gameObject);
         obj.transform.parent = transform;
@@ -53,7 +54,7 @@ public class PlayerShootController : MonoBehaviour
     }
 
 
-    public void ReleaseSuckedObjects()
+    public void ReleaseSuckedObjects() //Shoot out the objects by enabling them and handling other logic such as switching their state
     {
         if (SuckedObjectsListEmpty() || !canShoot)
             return;

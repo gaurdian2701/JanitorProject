@@ -32,7 +32,7 @@ public class UIController : MonoBehaviour
         EventService.Instance.OnLevelComplete.AddEventListener(HandleLevelCompleteEvent);
 
         playerHealthUI = new PlayerHealthUIHandler(heartUI);
-        suckedObjectsUI = new SuckedObjectsUI(suckedObjects);
+        suckedObjectsUI = new SuckedObjectsUI(suckedObjects); //Instantiate UI scripts for the player hearts and sucked objects
     }
 
     private void OnDestroy()
@@ -48,17 +48,17 @@ public class UIController : MonoBehaviour
         EventService.Instance.OnLevelComplete.RemoveEventListener(HandleLevelCompleteEvent);
     }
 
-    private void HandlePauseEvent(bool pauseState)
+    private void HandlePauseEvent(bool pauseState) //Pause game
     {
         PauseScreen.SetActive(pauseState);
     }
 
-    private void HandleLevelCompleteEvent()
+    private void HandleLevelCompleteEvent() //Level complete
     {
         LevelCompleteScreen.SetActive(true);
     }
 
-    private void ShowGameOverScreen()
+    private void ShowGameOverScreen() //Game over
     {
         GameOverScreen.SetActive(true);
     }

@@ -20,7 +20,7 @@ public class PlayerHealthUIHandler
         EventService.Instance.OnPlayerDamaged.RemoveEventListener(DecreaseHearts);
         heartUI.Clear();
     }
-    private void DecreaseHearts(float damage)
+    private void DecreaseHearts(float damage) //Decrease player hearts in UI
     {
         damage /= 100;
         Image heart = heartUI[imageIndex];
@@ -40,7 +40,7 @@ public class PlayerHealthUIHandler
 
     }
 
-    private void DisableHearts()
+    private void DisableHearts() //Disable UI when player dies
     {
         foreach (var heart in heartUI)
         {

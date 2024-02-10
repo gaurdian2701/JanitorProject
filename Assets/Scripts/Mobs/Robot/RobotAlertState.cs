@@ -5,14 +5,14 @@ using UnityEngine;
 public class RobotAlertState : RobotBaseState
 {
     private GameObject roboGun;
-    public override void EnterState(RobotStateManager robot)
+    public override void EnterState(RobotStateManager robot) //Show gun when entering alert state
     {
         robot.GetAnimator().SetTrigger("PrepareGun");
         roboGun = robot.GetRoboGun();
         robot.SetRobotShooting(true);
     }
 
-    public override void UpdateState(RobotStateManager robot)
+    public override void UpdateState(RobotStateManager robot) //Aim gun to player position
     {
         AimGun(robot.GetPlayerTransform(), robot);
     }
@@ -28,7 +28,7 @@ public class RobotAlertState : RobotBaseState
         roboGun.transform.eulerAngles = new Vector3(0, 0f, angle);
     }
 
-    public override void OnTriggerExit(Collider2D collision, RobotStateManager robot)
+    public override void OnTriggerExit(Collider2D collision, RobotStateManager robot) //Return to idle state when player exits trigger zone
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {

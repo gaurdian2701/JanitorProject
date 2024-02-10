@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
             ResetForwardPower();
         }
 
-        else if (moveDirection > 0f)
+        else if (moveDirection > 0f) //flip player object according to input direction
         {
             newRotation = new Vector3(0, 0, 0);
             transform.eulerAngles = newRotation;
@@ -115,10 +115,10 @@ public class PlayerController : MonoBehaviour
         if (isJumping)
             return;
 
-        if (context.performed && IsGrounded())
+        if (context.performed && IsGrounded()) //jump is grounded
             ExecuteJump(verticalJumpPower);
 
-        else if (context.performed && !IsGrounded() && !shootController.SuckedObjectsListEmpty())
+        else if (context.performed && !IsGrounded() && !shootController.SuckedObjectsListEmpty()) //execute extra jump if player has sucked objects
         {
             ExecuteJump(verticalJumpPower * extraJumpFactor);
             shootController.ReleaseSuckedObjects();
@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
         isJumping = false;
     }
 
-    private void ExecuteJump(float jumpPower)
+    private void ExecuteJump(float jumpPower) //Adds vertical jump power to existing velocity and also sets forward accelaration midair
     {
         rb.velocity = new Vector2(rb.velocity.x, jumpPower);
         currentForwardPower = midairForwardAccelaration;
@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour
             InitiateCoroutine(PLayerCoroutineType.HaltPlayer);
     }
 
-    public void InitiateCoroutine(PLayerCoroutineType routine)
+    public void InitiateCoroutine(PLayerCoroutineType routine) //Function to handle different coroutines in the Player Controller script.
     {
         switch (routine)
         {

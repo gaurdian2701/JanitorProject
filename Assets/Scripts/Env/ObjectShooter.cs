@@ -11,17 +11,17 @@ public class ObjectShooter : MonoBehaviour
 
     private void OnEnable()
     {
-        InvokeRepeating(nameof(ShootBox), 0f, shootFrequency);
+        InvokeRepeating(nameof(ShootProjectile), 0f, shootFrequency);
     }
 
-    private void ShootBox()
+    private void ShootProjectile()
     {
-        var tuple = objectPoolManager.GetProjectileFromPool(projectileRequired);
+        var tuple = objectPoolManager.GetProjectileFromPool(projectileRequired); //Get projectile from pool
         if (tuple == null)
             return;
 
         GameObject box = tuple.Item1;
-        if (box && box.TryGetComponent(out SuckableObjectStateManager boxState))
+        if (box && box.TryGetComponent(out SuckableObjectStateManager boxState)) //Enable projectile scripts and set launching location
         {
             box.SetActive(true);
             boxState.SetLauncher(this.gameObject);
@@ -32,6 +32,6 @@ public class ObjectShooter : MonoBehaviour
 
     private void OnDisable()
     {
-        CancelInvoke(nameof(ShootBox)); 
+        CancelInvoke(nameof(ShootProjectile)); 
     }
 }
