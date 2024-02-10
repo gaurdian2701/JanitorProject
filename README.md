@@ -11,5 +11,5 @@ All the Scripts are found in the Assets/Scripts folder.
 - Player folder:- contains scripts for the Player, sucking and shooting.
 - Scriptable Objects folder:- contains scripts for the Scriptable Objects and the scriptable objects themselves.
 - Suckable Objects folder:- contains the State Machine scripts for the suckable objects.
-- UI contains scripts for UI.
-- Utilities contains scripts for things like Levels, Events, and other stuff.
+- UI folder:- contains scripts for UI.
+- Utilities folder:- contains scripts for things like Levels, Events, and other stuff.
