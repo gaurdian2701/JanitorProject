@@ -5,6 +5,10 @@ using UnityEngine;
 using Unity.VisualScripting;
 using System.Text;
 using System.Threading.Tasks;
+using System;
+using UnityEngine.U2D;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -20,20 +24,24 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
     private CapsuleCollider2D playerCollider;
+    private SpriteRenderer spriteRenderer;
 
 
     private float currentForwardPower = 1f;
     private Rigidbody2D rb;
     private float moveDirection;
     private float currentMoveSpeed;
-    private PlayerShootController shootController;
     private bool isJumping;
     private bool isAttacking;
+    private bool isPaused;
+    private Color spriteOriginalColor;
 
     private PlayerState playerState;
     RaycastHit2D hit;
 
     public PlayerHealth playerHealth;
+    private PlayerShootController shootController;
+    private PlayerStatusHandler playerStatusHandler;
 
     private void Awake()
     {
@@ -41,14 +49,35 @@ public class PlayerController : MonoBehaviour
         currentMoveSpeed = moveSpeed;
         isJumping = false;
         isAttacking = false;
+        isPaused = false;
 
         rb = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<CapsuleCollider2D>();
         shootController = GetComponent<PlayerShootController>();
         animator = GetComponent<Animator>();
 
-        playerHealth = new PlayerHealth(healthAmount, GetComponent<SpriteRenderer>());
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteOriginalColor = spriteRenderer.material.GetColor("_Color");
+
+        playerHealth = new PlayerHealth(this);
+        playerStatusHandler = new PlayerStatusHandler(this, shootController);
+
+        EventService.Instance.OnPlayerDied.AddEventListener(HandlePlayerDeath);
     }
+
+    private void OnDisable()
+    {
+        EventService.Instance.OnPlayerDied.RemoveEventListener(HandlePlayerDeath);
+    }
+
+    private void HandlePlayerDeath()
+    {
+        playerStatusHandler.Disable();
+        this.gameObject.SetActive(false);
+    }
+
+    public float GetMoveSpeed() { return moveSpeed; }
+    public void SetMoveSpeed(float _speed) => currentMoveSpeed = _speed;
 
     private void FixedUpdate()
     {
@@ -96,6 +125,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void PauseGame(InputAction.CallbackContext context) //Pause Game
+    {
+        if (context.performed)
+        {
+            isPaused = isPaused ? false : true;
+            EventService.Instance.OnGamePaused.InvokeEvent(isPaused);
+        }
+    }
+
     public IEnumerator JumpingToggle()
     {
         isJumping = true;
@@ -131,13 +169,6 @@ public class PlayerController : MonoBehaviour
             playerState = PlayerState.idle;
     }
 
-    private async void HaltPlayer() //Function to stop player movement during attacking or sucking
-    {
-        currentMoveSpeed = 0f;
-        await Task.Delay(300);
-        currentMoveSpeed = moveSpeed;
-    }
-
     private bool IsGrounded()
     {
         hit = Physics2D.CircleCast(playerCollider.bounds.center, 0.3f, -transform.up, 1.3f, LayerMask.GetMask("Ground"));
@@ -158,7 +189,21 @@ public class PlayerController : MonoBehaviour
         }
 
         if (IsGrounded())
-            HaltPlayer();
+            InitiateCoroutine(PLayerCoroutineType.HaltPlayer);
+    }
+
+    public void InitiateCoroutine(PLayerCoroutineType routine)
+    {
+        switch (routine)
+        {
+            case PLayerCoroutineType.HaltPlayer:
+                HaltPlayer(300); break;
+
+            case PLayerCoroutineType.InitiateDamageFlash:
+                FlashColor(150, Color.red); break;
+
+            default: break;
+        }
     }
 
     public void PlayerSuck(InputAction.CallbackContext context)
@@ -169,7 +214,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (IsGrounded())
-            HaltPlayer();
+            InitiateCoroutine(PLayerCoroutineType.HaltPlayer);
     }
 
     public bool CheckIfAttacking()
@@ -180,6 +225,23 @@ public class PlayerController : MonoBehaviour
     public void ToggleAttackState()
     {
         isAttacking = !isAttacking;
+    }
+    #endregion
+
+    #region Coroutines
+
+    private async void FlashColor(int time, Color color) //Flashes the player sprite in a certain color
+    {
+        spriteRenderer.material.color = color;
+        await Task.Delay(time);
+        spriteRenderer.material.color = spriteOriginalColor;
+    }
+
+    private async void HaltPlayer(int time) //Function to stop player movement while shooting or sucking
+    {
+        currentMoveSpeed = 0f;
+        await Task.Delay(time);
+        currentMoveSpeed = moveSpeed;
     }
     #endregion
 }

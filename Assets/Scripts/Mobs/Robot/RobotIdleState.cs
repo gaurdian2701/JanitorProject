@@ -41,8 +41,8 @@ public class RobotIdleState : RobotBaseState
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            robot.SwitchState(robot.alert);
             robot.SetPlayerTransform(collision.transform);
+            robot.SwitchState(robot.alert);
         }
     }
 }

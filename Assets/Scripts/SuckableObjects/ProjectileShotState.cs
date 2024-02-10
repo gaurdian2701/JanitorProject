@@ -46,30 +46,36 @@ public class ProjectileShotState : SuckableBase
                             break;
 
                         case ProjectileType.RoboGunProjectile:
-                            SuckableBase.RenderRoboGunProjectileUsability(obj.GetUsabilityIndex(), Usability.Usable);
+                            SuckableBase.RenderRoboGunProjectileUsability(obj.GetUsabilityIndex(), Usability.Usable); //Rendering usability for corresponding projectiles
                             break;
                     }
-                    obj.gameObject.SetActive(false);
+                    obj.gameObject.SetActive(false); //Deactivating object on collision which makes it part of the unused pool once again
                 }
                 break;
 
             case ProjectilePooledType.NotPooled:
-                obj.SwitchState(obj.idle);
+                obj.SwitchState(obj.idle); // Non-pooled objects simply switch to idle state
                 break;
 
             default: break;
         }
     }
 
-    public override void OnTriggerEnter(SuckableObjectStateManager obj, Collider2D collision)
+    public override void OnTriggerEnter(SuckableObjectStateManager obj, Collider2D collision) //Logic for handling hitbox trigger collisions
     {
         collidedObject = collision.gameObject;
         layer = collidedObject.layer;
 
         if (layer == LayerMask.NameToLayer("EnemyHurtBox"))
-            collidedObject.transform.parent.GetComponent<RobotStateManager>().robotHealth?.TakeDamage(obj.GetProjectileDamage());
+            collidedObject.transform.parent.GetComponent<RobotStateManager>().robotHealth?.TakeDamage(obj.GetProjectileDamage()); //Deal damage to enemy
 
-        else if(layer == LayerMask.NameToLayer("PlayerHurtBox"))
-            collidedObject.transform.parent.GetComponent<PlayerController>().playerHealth?.TakeDamage(obj.GetProjectileDamage());
+        else if (layer == LayerMask.NameToLayer("PlayerHurtBox"))
+        {
+            collidedObject.transform.parent.GetComponent<PlayerController>().playerHealth?.TakeDamage(obj.GetProjectileDamage()); //Deal damage to player
+            EventService.Instance.OnApplyStatus.InvokeEvent(obj.GetStatusApplied()); //Apply status effect
+        }
+
+        if(obj.GetProjectilePooledType() == ProjectilePooledType.Pooled)
+            obj.gameObject.SetActive(false); //If the object is pooled then return it to the pool
     }
 }

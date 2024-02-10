@@ -17,7 +17,6 @@ public class ProjectileSuckedState : SuckableBase
         obj.transform.localScale = obj.GetOriginalSize();
         projectileSucked = false;
         suckPos = obj.GetSuckPosition();
-
         shrinkRate = obj.GetShrinkRate();
     }
 
@@ -35,6 +34,8 @@ public class ProjectileSuckedState : SuckableBase
 
             default:
                 break;
+
+            //Rendering of usability for pooled objects. The GetUsabilityIndex() returns the index of the object in the usability list
         }
     }
 
@@ -43,17 +44,18 @@ public class ProjectileSuckedState : SuckableBase
         if (projectileSucked)
             return;
 
-        obj.transform.Rotate(obj.transform.forward, 25f);
-        obj.transform.position = Vector3.Lerp(obj.transform.position, suckPos.position, 1f);
+        obj.transform.Rotate(obj.transform.forward, 25f); //making the object spin while getting sucked in
+        obj.transform.position = Vector3.Lerp(obj.transform.position, suckPos.position, 1f); //lerping towards suckPos(in this case the plunger)
 
         if (obj.transform.localScale.x > 0.1f)
-            obj.transform.localScale -= shrinkRate * Time.deltaTime;
+            obj.transform.localScale -= shrinkRate * Time.deltaTime; //shrinking of the projectile
 
         else
         {
-            projectileSucked = true;
+            projectileSucked = true; 
             suckPos = null;
-            ObjectSucked?.Invoke(obj.gameObject);
+            EventService.Instance.OnObjectSucked.InvokeEvent(obj); //This event is subscribed to by the Shooter script of the Player which would then handle the addition
+                                                                  //of the object to the list of sucked objects
         }
     }
 }

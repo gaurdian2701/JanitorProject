@@ -12,9 +12,11 @@ public class SuckableObjectStateManager : MonoBehaviour
     private ObjectState startingState;
     private Vector3 shrinkRate;
     private float projectileDamage;
+    private Rigidbody2D rb;
 
     private ProjectilePooledType projectilePooledType;
     private ProjectileType projectileType;
+    private Status statusApplied;
     private SpriteRenderer spriteRenderer;
 
     private Vector3 originalSize = new Vector3(1f, 1f, 1f);
@@ -32,6 +34,7 @@ public class SuckableObjectStateManager : MonoBehaviour
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
 
         InitializeValues();
         ChooseStartingState();
@@ -61,6 +64,7 @@ public class SuckableObjectStateManager : MonoBehaviour
         projectileType = projectileSO.projectileType;
         startingState = projectileSO.startingState;
         projectileDamage = projectileSO.damageAmount;
+        statusApplied = projectileSO.statusApplied;
         shrinkRate = new Vector3(projectileSO.shrinkValue, projectileSO.shrinkValue, 0f);
         isSucked = false;
     }
@@ -88,7 +92,6 @@ public class SuckableObjectStateManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log("update");
         currentState?.UpdateState(this);
     }
 
@@ -104,10 +107,14 @@ public class SuckableObjectStateManager : MonoBehaviour
         currentState?.OnTriggerEnter(this, collision);
     }
 
+    public Status GetStatusApplied() { return statusApplied; }
+    public Rigidbody2D GetRigidbody() { return rb; }
     public float GetProjectileDamage() { return projectileDamage; }        
     public Vector3 GetShrinkRate() { return shrinkRate; }
     
     public Vector3 GetOriginalSize() { return originalSize; }
+
+    public Sprite GetSprite() {  return spriteRenderer.sprite; }
 
     public float GetShootSpeed() { return shootSpeed;  }
 

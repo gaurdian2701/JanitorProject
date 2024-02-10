@@ -20,7 +20,7 @@ public class RoboGunProjectilePool : ObjectPool
     }
     protected override void ChangeUsability(int i, Usability usability)
     {
-        base.usabilityList[i] = usability;
+        base.ChangeUsability(i, usability);
     }
     public override Tuple<GameObject, int> GetPooledObject()
     {

@@ -9,7 +9,9 @@ public class ProjectileScriptableObject : ScriptableObject
     public ObjectState startingState;
     public ProjectilePooledType projectilePooledType;
     public ProjectileType projectileType;
+    public Status statusApplied;
     public float shrinkValue;
     public float shootSpeed;
+    [Range(10, 100)]
     public float damageAmount;
 }
