@@ -8,10 +8,10 @@ public class ProjectileIdleState : SuckableBase
     private Rigidbody2D rb;
     public override void EnterState(SuckableObjectStateManager obj)
     {
-        obj.gameObject.layer = LayerMask.NameToLayer("Suckable");
-        rb = obj.GetComponent<Rigidbody2D>();
-        rb.constraints = RigidbodyConstraints2D.None;
+        rb = obj.GetRigidbody();
+        rb.constraints = RigidbodyConstraints2D.None; //allows free 2D physics
 
-        obj.ToggleHitbox(false);
+        obj.ToggleHitbox(false); //disabling the hitbox so that damage wont get registered
+        obj.enabled = false; //disabling the state manager so that empty Update() calls wont happen
     }
 }

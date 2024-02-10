@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -7,15 +6,26 @@ public class RobotHealth : IDamageable
 {
     private SpriteRenderer sprite;
     private Color spriteOriginalColor;
-    public RobotHealth(RobotStateManager robot)
+    private float health;
+    private float currentHealth;
+    private RobotStateManager robot;
+    public RobotHealth(SpriteRenderer _sprite, float _health, RobotStateManager _robot)
     {
-        sprite = robot.GetSpriteRenderer();
+        sprite = _sprite;
+        health = _health;
+        currentHealth = _health;
+        robot = _robot;
         spriteOriginalColor = sprite.material.GetColor("_Color");
     }
     public void TakeDamage(float damage)
     {
-        //Health reduce logic
         FlashRed();
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            robot.OnDeath();
+        }
     }
 
     private async void FlashRed()

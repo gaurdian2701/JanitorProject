@@ -5,17 +5,18 @@ using UnityEngine;
 public class ObjectShooter : MonoBehaviour
 {
     [SerializeField] private float shootFrequency;
-    [SerializeField] private ProjectileType projectileType;
+    [SerializeField] private ProjectileType projectileRequired;
     [SerializeField] private Transform shootPos;
+    [SerializeField] private ObjectPoolManager objectPoolManager;
 
-    private void Awake()
+    private void OnEnable()
     {
         InvokeRepeating(nameof(ShootBox), 0f, shootFrequency);
     }
 
     private void ShootBox()
     {
-        var tuple = ObjectPoolManager.Instance.GetProjectileFromPool(projectileType);
+        var tuple = objectPoolManager.GetProjectileFromPool(projectileRequired);
         if (tuple == null)
             return;
 
@@ -27,5 +28,10 @@ public class ObjectShooter : MonoBehaviour
             boxState.SetUsabilityIndex(tuple.Item2);    
             boxState.SwitchToShoot(shootPos);
         }
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke(nameof(ShootBox)); 
     }
 }

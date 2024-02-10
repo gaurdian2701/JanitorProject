@@ -12,6 +12,7 @@ public class GenericMonoSingleton<T> : MonoBehaviour where T : GenericMonoSingle
         if (instance == null)
         {
             instance = (T)this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {

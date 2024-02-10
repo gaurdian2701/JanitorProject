@@ -21,10 +21,10 @@ public class RobotIdleState : RobotBaseState
         position.x += robot.transform.forward.z * robot.GetCurrentSpeed() * Time.deltaTime;
         robot.transform.position = position;
 
-         rayBottom = Physics2D.Raycast(robotCollider.bounds.center, 
-            new Vector2(robot.transform.forward.z, -0.5f), 2.5f, robot.GetGroundMask());
+        rayBottom = Physics2D.Raycast(robotCollider.bounds.center,
+           new Vector2(robot.transform.forward.z, -0.5f), 3.5f, robot.GetGroundMask());
 
-         rayForward = Physics2D.Raycast(robotCollider.bounds.center, robot.transform.right, 1f, robot.GetGroundMask());
+        rayForward = Physics2D.Raycast(robotCollider.bounds.center, robot.transform.right, 2f, robot.GetGroundMask());
 
         if (!rayBottom || rayForward)
         {
@@ -40,8 +40,9 @@ public class RobotIdleState : RobotBaseState
     public override void OnTriggerEnter(Collider2D collision, RobotStateManager robot)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            robot.SetPlayerTransform(collision.transform);
             robot.SwitchState(robot.alert);
-
-        robot.SetPlayerTransform(collision.transform);
+        }
     }
 }

@@ -19,8 +19,8 @@ TagManager:
   - EnemDetectionLayer
   - ProjectileHitBox
   - EnemyHurtBox
-  - 
-  - 
+  - PlayerHurtBox
+  - KillZone
   - 
   - 
   - 
