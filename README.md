@@ -1,6 +1,6 @@
 # JanitorProject
 Repo for a small personal 2D platformer project of mine.
-I created most of the assets from scratch using Aseprite software.
+I created all the assets from scratch using Aseprite software.
 
 I have merged everything into the main branch.
 All the Scripts are found in the Assets/Scripts folder.

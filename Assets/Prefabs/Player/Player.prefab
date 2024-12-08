@@ -340,7 +340,6 @@ MonoBehaviour:
   midairForwardAccelaration: 1.5
   midairDecelaration: 0.05
   healthAmount: 100
-  statusText: {fileID: 0}
 --- !u!114 &422020699496841824
 MonoBehaviour:
   m_ObjectHideFlags: 0

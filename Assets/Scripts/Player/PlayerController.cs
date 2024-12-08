@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveDirection * currentMoveSpeed * currentForwardPower, rb.linearVelocity.y);
         animator.SetFloat("MoveSpeed", Mathf.Abs(moveDirection));
         CheckForFall();
         animator.SetInteger("PlayerState", (int)playerState);
@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
 
     private void ExecuteJump(float jumpPower) //Adds vertical jump power to existing velocity and also sets forward accelaration midair
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
         currentForwardPower = midairForwardAccelaration;
     }
 
@@ -159,9 +159,9 @@ public class PlayerController : MonoBehaviour
 
     private void CheckForFall() //Function to check grounded state in order to trigger proper animation transitions between jumping and falling
     {
-        if (!IsGrounded() && rb.velocity.y != 0f)
+        if (!IsGrounded() && rb.linearVelocity.y != 0f)
         {
-            playerState = rb.velocity.y < 0f ? PlayerState.falling : PlayerState.jumping;
+            playerState = rb.linearVelocity.y < 0f ? PlayerState.falling : PlayerState.jumping;
             DecreaseForwardPower();
         }
 

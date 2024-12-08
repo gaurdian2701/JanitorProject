@@ -29,7 +29,7 @@ public class ProjectileShotState : SuckableBase
 
     public override void UpdateState(SuckableObjectStateManager obj)
     {
-        rb.velocity = obj.GetShootSpeed() * direction;
+        rb.linearVelocity = obj.GetShootSpeed() * direction;
     }
 
     public override void OnCollisionEnter(SuckableObjectStateManager obj, Collision2D collision)
